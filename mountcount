@@ -1,0 +1,114 @@
+#!/bin/bash
+#if [ "$USER" != "root" ]; then
+#	sudo $0 $*
+#	exit
+#fi
+
+export LC_ALL=C
+
+export TUNE2FS=/sbin/tune2fs
+
+ICINGA_STATUS=0
+
+MOUNTCOUNT_WARNING=5
+MOUNTCOUNT_CRITICAL=0
+
+MOUNTTIME_WARNING=95
+MOUNTTIME_CRITICAL=100
+
+for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
+	MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM|grep "Mount count"|cut -d ":" -f 2|sed "s/ //g"`
+	MAX_MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM|grep "Maximum mount count"|cut -d ":" -f 2|sed "s/ //g"`
+
+	LAST_CHECK_DATE=`$TUNE2FS -l $FILESYSTEM|grep "Last checked"|cut -d ":" -f 2,3,4`
+	LAST_CHECK_TIMESTAMP=`date -d "$LAST_CHECK_DATE" +%s`
+	CHECK_INTERVAL=`$TUNE2FS -l $FILESYSTEM|grep "Check interval"|cut -d ":" -f 2|sed 's/^[^0-9]*//g;s/ .*$//g'`
+
+	CHECK_CRITICAL_INTERVAL=$((CHECK_INTERVAL * MOUNTTIME_CRITICAL / 100))
+	CHECK_CRITICAL_TIMESTAMP=$((LAST_CHECK_TIMESTAMP+CHECK_CRITICAL_INTERVAL))
+
+	CHECK_WARNING_INTERVAL=$((CHECK_INTERVAL * MOUNTTIME_WARNING / 100))
+	CHECK_WARNING_TIMESTAMP=$((LAST_CHECK_TIMESTAMP+CHECK_WARNING_INTERVAL))
+	
+	CURRENT_TIME=`date +%s`
+
+	MOUNTCOUNT_STATUS=0
+	MOUNTTIME_STATUS=0
+
+	MOUNTCOUNT_INFO=""
+	MOUNTTIME_INFO=""
+
+	if [ "$1" != "--mailinfo" -a "$1" != "--icinga" ]; then
+		echo -n "Filesystem: $FILESYSTEM: "
+	fi
+
+	if [ "$MAX_MOUNTCOUNT" -ne "-1" ]; then
+		DIFFERENCE=$((MAX_MOUNTCOUNT-MOUNTCOUNT))
+
+		if [ $DIFFERENCE -gt $MOUNTCOUNT_WARNING ]; then
+			MOUNTCOUNT_INFO="$DIFFERENCE mounts to go"
+		elif [ $DIFFERENCE -le $MOUNTCOUNT_CRITICAL ]; then
+			MOUNTCOUNT_STATUS=2
+			MOUNTCOUNT_INFO="mounted $MOUNTCOUNT times, maximum count is $MAX_MOUNTCOUNT"
+		else
+			MOUNTCOUNT_STATUS=1
+			MOUNTCOUNT_INFO="$DIFFERENCE mounts to go"
+		fi
+	else
+		MOUNTCOUNT_INFO="no check due to mount count required"
+	fi
+
+	if [ "$CHECK_INTERVAL" -eq 0 ]; then
+		MOUNTTIME_INFO="no check based on time required"
+	else
+		if [ "$CURRENT_TIME" -lt "$CHECK_WARNING_TIMESTAMP" ]; then
+			MOUNTTIME_INFO="$(( (CHECK_WARNING_TIMESTAMP-CURRENT_TIME) / 86400)) day(s) until mount time warning"
+		elif [ "$CURRENT_TIME" -lt "$CHECK_CRITICAL_TIMESTAMP" ]; then
+			MOUNTTIME_STATUS=1
+			MOUNTTIME_INFO="$(( (CHECK_CRITICAL_TIMESTAMP-CURRENT_TIME) / 86400)) day(s) until mount time being critical"
+		else
+			MOUNTTIME_STATUS=2
+			MOUNTTIME_INFO="mount time critical"
+		fi
+	fi
+
+	if [ "$1" == "--mailinfo" ]; then
+		if [ "$MOUNTCOUNT_STATUS" -eq 0 -a "$MOUNTTIME_STATUS" -eq 0 ]; then
+			echo -n "" # do nothing
+		elif [ "$MOUNTCOUNT_STATUS" -lt 2 -a "$MOUNTTIME_STATUS" -lt 2 ]; then
+			echo "Filesystem $FILESYSTEM requires a check soon ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
+		else
+			echo "Filesystem $FILESYSTEM requires a check ASAP ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
+		fi
+	elif [ "$1" == "--icinga" ]; then
+		if [ "$MOUNTCOUNT_STATUS" -gt "$ICINGA_STATUS" ]; then
+			ICINGA_STATUS=$MOUNTCOUNT_STATUS
+		fi
+		if [ "$MOUNTTIME_STATUS" -gt "$ICINGA_STATUS" ]; then
+			ICINGA_STATUS=$MOUNTTIME_STATUS
+		fi
+		if [ "$MOUNTCOUNT_STATUS" -eq 2 -o "$MOUNTTIME_STATUS" -eq 2 ]; then
+			echo -n "$FILESYSTEM requires a check ASAP; "
+		elif [ "$MOUNTCOUNT_STATUS" -eq 1 -o "$MOUNTTIME_STATUS" -eq 1 ]; then
+			echo -n "$FILESYSTEM requires a check soon; "
+		fi
+	else
+		if [ "$MOUNTCOUNT_STATUS" -eq 0 -a "$MOUNTTIME_STATUS" -eq 0 ]; then
+			echo -e "\E[01;32mno check required$(tput sgr0) ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
+		elif [ "$MOUNTCOUNT_STATUS" -lt 2 -a "$MOUNTTIME_STATUS" -lt 2 ]; then
+			echo -e "\E[01;33mcheck required$(tput sgr0) ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
+		else
+			echo -e "\E[01;31mcheck ASAP required$(tput sgr0) ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
+		fi
+	fi
+done
+
+if [ "$1" == "--icinga" ]; then
+	if [ "$ICINGA_STATUS" -eq "0" ]; then
+		echo "No filesystem checks necessary."
+	else
+		echo ""
+	fi
+	exit $ICINGA_STATUS
+fi
+

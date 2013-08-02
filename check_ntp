@@ -1,0 +1,22 @@
+#!/bin/bash
+ERROR=0
+if [ "`ntpq -pn|grep -c INIT`" -gt "0" ]; then
+	ERROR=1
+fi
+if [ "`ntpq -pn|grep -c XFAC`" -gt "0" ]; then
+	ERROR=1
+fi
+if [ "$ERROR" -ne "0" ]; then
+	if [ "$1" == "--icinga" ]; then
+		echo NTP is fucked up once more. Router restart required?
+		echo
+		ntpq -pn
+	else
+		echo NTP broken. Please restart the router ASAP.
+		exit 2
+	fi
+elif [ "$1" == "--icinga" ]; then
+	echo "Everything fine."
+fi
+
+
