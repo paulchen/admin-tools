@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import ntpath, os.path, urllib, argparse
+import ntpath, os.path, urllib, argparse, datetime
 
 from urllib.request import urlopen
 from xml.etree import ElementTree
@@ -20,6 +20,8 @@ base_url = 'https://www.bing.com/HPImageArchive.aspx?format=xml&idx=%s&n=8&mkt=%
 indices = [ 0, 8 ]
 markets = [ 'en-US', 'en-AU', 'pt-BR', 'de-DE', 'fr-FR', 'en-IN', 'ja-JP', 'en-CA', 'fr-CA', 'en-GB', 'zh-CN', 'de-AT' ]
 resolutions = [ '1920x1080', '1080x1920' ]
+
+print(datetime.datetime.now())
 
 for market in markets:
     print(market)
@@ -46,6 +48,8 @@ for market in markets:
                     urllib.request.urlretrieve(jpg_url, filename)
 
                     call(['jhead', '-cl', copyright, filename])
+
+print(datetime.datetime.now())
 
 with open(touch_file, 'a'):
     os.utime(touch_file)
