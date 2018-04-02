@@ -1,0 +1,19 @@
+#!/bin/bash
+
+wait_for_check() {
+	while [ "`grep -c 'check =' /proc/mdstat`" -ne "0" ]; do
+		sleep 300
+	done
+}
+
+for device in `grep ^md /proc/mdstat|sed -e "s/ .*//"|sort`; do
+	wait_for_check
+	date
+	echo Starting check of /dev/$device...
+	/usr/share/mdadm/checkarray --cron --idle --quiet /dev/$device
+	echo Waiting for completion...
+done
+wait_for_check
+date
+echo Done
+
