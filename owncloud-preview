@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cd /var/www/cloud
+
+rm -f /tmp/owncloud-preview-check
+ps aux > /tmp/owncloud-preview-check
+running=`grep -c 'php occ preview:pre-generate' /tmp/owncloud-preview-check`
+rm -f /tmp/owncloud-preview-check
+
+if [ "$running" -ne "0" ]; then
+	exit
+fi
+
+fail=0
+/usr/bin/ionice -c3 php occ preview:pre-generate || fail=1
+
+if [ "$fail" -eq "1" ]; then
+	echo Fail
+fi
+
+exit $fail
+
