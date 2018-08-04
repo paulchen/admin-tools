@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# https://apps.nextcloud.com/apps/previewgenerator
+#
+# When adding a large number of image files to Nextcloud, one run
+# of 'php occ preview:pre-generate' may take long time.
+# If the script is invoked by cron another time in the meantime,
+# it fails with an error message.
+# This script invokes 'php occ preview:pre-generate' only if
+# it is not already running in order to avoid this script
+# failing with an error.
+
 cd /var/www/cloud
 
 rm -f /tmp/owncloud-preview-check
