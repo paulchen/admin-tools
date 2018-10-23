@@ -1,6 +1,10 @@
 #!/bin/bash
 
 git_pull() {
+	if [ ! -e "$1" ]; then
+		return
+	fi
+
 	echo ""
 	date
 	echo "Updating $1..."
