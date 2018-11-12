@@ -1,0 +1,5 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+22 2-20/6 * * * root /opt/admin-tools/apache_error_log/apache_error_log.sh
+
