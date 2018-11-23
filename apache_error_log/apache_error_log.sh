@@ -42,6 +42,7 @@ find . -name error.log -exec cat {} \; |
 	grep -v 'None could be negotiated' |
 	grep -v 'Action ".*" does not exist' |
 	grep -v 'no record of generation [0-9]* of existing child' |
+	grep -v 'Invalid method in request' |
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //"
