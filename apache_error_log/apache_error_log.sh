@@ -45,7 +45,8 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'Invalid method in request' |
 	"$filename" --convert |
 	sort |
-	sed -e "s/^[^ ]* //"
+	sed -e "s/^[^ ]* //" |
+	grep -v -e '^[[:space:]]*$'
 
 
 touch "$statusfile"
