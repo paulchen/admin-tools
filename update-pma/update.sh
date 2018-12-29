@@ -1,4 +1,6 @@
 #!/bin/bash
+SCRIPT_FILENAME=`readlink -f "$0"`
+SCRIPT_DIR=`dirname "$SCRIPT_FILENAME"`
 DIRECTORY=/var/www/default/web
 
 INSTALLED=`/opt/icinga/update-checker/applications/phpmyadmin/update_installed.sh`
@@ -33,6 +35,9 @@ rmdir pma-new
 cp pma/config.inc.php pma-new2
 mkdir pma-new2/tmp
 chown www-data:www-data pma-new2/tmp
+cd pma-new2
+patch -p1 < $SCRIPT_DIR/pma.patch
+cd ..
 
 echo Hit any key key to perform the update...
 read
