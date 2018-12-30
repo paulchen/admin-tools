@@ -12,6 +12,7 @@ for device in `grep ^md /proc/mdstat|sed -e "s/ .*//"|sort`; do
 	echo Starting check of /dev/$device...
 	/usr/share/mdadm/checkarray --cron --idle --quiet /dev/$device
 	echo Waiting for completion...
+	sleep 60
 done
 wait_for_check
 date
