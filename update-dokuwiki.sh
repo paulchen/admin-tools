@@ -29,3 +29,6 @@ chown -R www-data:www-data /home/paulchen/public_html/dokuwiki/
 # remove update notification on web page
 rm -f /home/paulchen/public_html/dokuwiki/cache/messages.txt
 
+# refresh update checker
+/opt/icinga/update-checker/refresh.sh
+
