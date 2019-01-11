@@ -1,5 +1,11 @@
 #!/bin/bash
 
+ERROR=0
+fail() {
+	ERROR=1
+	echo "Fail!"
+}
+
 deploy_cert() {
     local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
 
@@ -22,11 +28,11 @@ deploy_cert() {
     # - TIMESTAMP
     #   Timestamp when the specified certificate was created.
 
-    /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN
+    /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN || fail
 
     for host in alniyat girtab gamma.rueckgr.at; do
-        rsync -av /etc/dehydrated/certs/ $host:/etc/dehydrated/certs/
-	ssh $host /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN
+        rsync -av /etc/dehydrated/certs/ $host:/etc/dehydrated/certs/ || fail
+	ssh $host /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN || fail
     done
 }
 
@@ -72,4 +78,6 @@ HANDLER="$1"; shift
 if [[ "${HANDLER}" =~ ^(deploy_cert|invalid_challenge|request_failure)$ ]]; then
 	"$HANDLER" "$@"
 fi
+
+exit $ERROR
 
