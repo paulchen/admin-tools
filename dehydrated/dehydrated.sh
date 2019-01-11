@@ -13,6 +13,8 @@ rm -f $UPDATE_FILE
 rm -f $LOG_FILE
 rm -f $ERROR_FILE
 
+ERROR=0
+
 print_date() {
 	echo ""
 	echo ""
@@ -21,8 +23,15 @@ print_date() {
 	echo ""
 }
 
+fail() {
+	ERROR=1
+	echo ""
+	echo "Fail!"
+	echo ""
+}
+
 print_date >> $LOG_FILE
-/opt/dehydrated/dehydrated -c >> $LOG_FILE 2>&1
+/opt/dehydrated/dehydrated -c >> $LOG_FILE 2>&1 || fail
 print_date >> $LOG_FILE
 
 cat $LOG_FILE >> /var/log/dehydrated.log
@@ -34,6 +43,9 @@ if [ -f $UPDATE_FILE ]; then
 		cat $LOG_FILE
 	fi
 elif [ -f $ERROR_FILE ]; then
+	cat $LOG_FILE
+	EXIT_CODE=1
+elif [ "$ERROR" -ne "0" ]; then
 	cat $LOG_FILE
 	EXIT_CODE=1
 fi
