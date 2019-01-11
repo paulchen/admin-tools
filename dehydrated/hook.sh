@@ -22,11 +22,11 @@ deploy_cert() {
     # - TIMESTAMP
     #   Timestamp when the specified certificate was created.
 
-    /root/bin/dehydrated/deploy_cert.sh $DOMAIN
+    /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN
 
     for host in alniyat girtab gamma.rueckgr.at; do
         rsync -av /etc/dehydrated/certs/ $host:/etc/dehydrated/certs/
-	ssh $host /root/bin/dehydrated/deploy_cert.sh $DOMAIN
+	ssh $host /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN
     done
 }
 
