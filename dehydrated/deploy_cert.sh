@@ -45,8 +45,14 @@ done
 
 for domain in "${DOVECOT_CERTS[@]}"; do
 	if [ "$domain" == "all" ] || [ "$domain" == "$1" ]; then
-		echo Restarting Dovecot due to renewal of certificate for domain $1 ...
-		systemctl restart dovecot.service || fail
+		if systemctl status dovecot.service > /dev/null 2>&1; then
+			echo Restarting Dovecot due to renewal of certificate for domain $1 ...
+			systemctl restart dovecot.service || fail
+		fi
+		if systemctl status dovecot-custom.service > /dev/null 2>&1; then
+			echo Restarting Dovecot due to renewal of certificate for domain $1 ...
+			systemctl restart dovecot-custom.service || fail
+		fi
 	fi
 done
 
