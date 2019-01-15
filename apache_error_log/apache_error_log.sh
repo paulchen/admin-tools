@@ -43,6 +43,7 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'Action ".*" does not exist' |
 	grep -v 'no record of generation [0-9]* of exiting child' |
 	grep -v 'Invalid method in request' |
+	grep -v 'PostfixAdmin login failed' |
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |
