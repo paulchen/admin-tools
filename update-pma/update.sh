@@ -1,7 +1,14 @@
 #!/bin/bash
 SCRIPT_FILENAME=`readlink -f "$0"`
 SCRIPT_DIR=`dirname "$SCRIPT_FILENAME"`
-DIRECTORY=/var/www/default/web
+
+cd "$SCRIPT_DIR"
+if [ ! -f pma.config ]; then
+	echo "pma.config not found, exiting now"
+	exit 1
+fi
+
+. pma.config
 
 INSTALLED=`/opt/icinga/update-checker/applications/phpmyadmin/update_installed.sh`
 AVAILABLE=`/opt/icinga/update-checker/applications/phpmyadmin/update_available.sh`
@@ -24,7 +31,7 @@ echo Filename: $LINK
 
 cd /tmp
 wget $LINK -q -O pma.tar.bz2
-cd $DIRECTORY
+cd $PMA_INSTALL_DIR
 mkdir pma-new
 cd pma-new
 tar xf /tmp/pma.tar.bz2
