@@ -45,6 +45,8 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'Invalid method in request' |
 	grep -v 'PostfixAdmin login failed' |
 	grep -v 'AH01618' | # user not found
+	grep -v 'AH01102' | # error reading status line from server (reverse proxy)
+	grep -v 'AH00898' | # error reading from remote server (reverse proxy)
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |
