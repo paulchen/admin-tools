@@ -38,7 +38,7 @@ rsync -av "$CURRENT_DIR/logs/" "$NEW_DIR/logs/"
 cp "$CURRENT_DIR/bin/setenv.sh" "$NEW_DIR/bin/"
 cp -P "$CURRENT_DIR"/webapps/*.war "$NEW_DIR/webapps"
 
-chown -R jenkins:tomcat6 "$NEW_DIR"
+chown -R jenkins:jenkins "$NEW_DIR"
 
 rm -f apache-tomcat
 ln -s "$NEW_DIR" "apache-tomcat"
