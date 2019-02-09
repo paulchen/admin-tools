@@ -16,6 +16,11 @@ cat "$BACKUP_FILENAME" >> "$LOGFILE"
 if [ "$SUCCESS" -ne "1" ]; then
 	echo Error running backup script
 	cat "$BACKUP_FILENAME"
+
+	rm -f "/var/backup-states/succcess_$2"
+else
+	touch "/var/backup-states/last_$2"
+	touch "/var/backup-states/succcess_$2"
 fi
 rm -f "$BACKUP_FILENAME"
 
