@@ -9,6 +9,9 @@ if [ "$3" != "" ]; then
 	LOGFILE=/var/log/backup-$3.log
 fi
 
+# don't allow others to read our log files
+umask 0077
+
 "$BACKUP_SCRIPT" > "$BACKUP_FILENAME" 2>&1 && SUCCESS=1
 
 cat "$BACKUP_FILENAME" >> "$LOGFILE"
