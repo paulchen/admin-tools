@@ -27,3 +27,7 @@ else
 fi
 rm -f "$BACKUP_FILENAME"
 
+if [ "$SUCCESS" -ne "1" ]; then
+	exit 1
+fi
+
