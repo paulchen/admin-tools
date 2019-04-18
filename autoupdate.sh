@@ -18,4 +18,5 @@ git_pull /opt/munin-contrib >> /var/log/autoupdate.log 2>&1
 git_pull /var/www/mail/roundcube/plugins/carddav/ >> /var/log/autoupdate.log 2>&1 
 git_pull /var/www/default/web/rss/plugins.local/tumblr_gdpr >> /var/log/autoupdate.log 2>&1
 git_pull /opt/nextcloud-munin-py >> /var/log/autoupdate.log 2>&1
+git_pull /var/www/default/web/rss-bridge >> /var/log/autoupdate.log 2>&1
 
