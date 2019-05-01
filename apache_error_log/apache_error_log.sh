@@ -37,7 +37,6 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'provided via SNI, but no hostname provided in HTTP request' |
 	grep -v 'provided via SNI and hostname' |
 	grep -v 'Invalid URI in request GET' |
-	grep -v 'Empty module and/or action after parsing the URL' |
 	grep -v 'rejecting client initiated renegotiation' |
 	grep -v 'None could be negotiated' |
 	grep -v 'Action ".*" does not exist' |
