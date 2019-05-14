@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /opt/icinga/update-checker/applications/postfixadmin/
+cd /opt/icinga-plugins/update-checker/applications/postfixadmin/
 INSTALLED_VERSION=`./update_installed.sh`
 NEW_VERSION=`./update_available.sh`
 
@@ -52,7 +52,7 @@ while true; do
 		rm -rf pfa-old
 		echo "We're done here."
 
-		/opt/icinga/update-checker/refresh.sh
+		/opt/icinga-plugins/update-checker/refresh.sh
 
 		exit 0
 	elif [ "$INPUT" == "n" ]; then

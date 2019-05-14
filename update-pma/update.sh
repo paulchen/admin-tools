@@ -10,8 +10,8 @@ fi
 
 . pma.config
 
-INSTALLED=`/opt/icinga/update-checker/applications/phpmyadmin/update_installed.sh`
-AVAILABLE=`/opt/icinga/update-checker/applications/phpmyadmin/update_available.sh`
+INSTALLED=`/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh`
+AVAILABLE=`/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_available.sh`
 
 echo Currently installed version: $INSTALLED
 echo Latest available version: $AVAILABLE
@@ -60,7 +60,7 @@ while true; do
 		rm -rf pma-old
 		echo "We're done here."
 
-		/opt/icinga/update-checker/refresh.sh
+		/opt/icinga-plugins/update-checker/refresh.sh
 
 		exit 0
 	elif [ "$INPUT" == "n" ]; then

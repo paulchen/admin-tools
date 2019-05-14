@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CURRENT_DIR=`readlink -f /opt/apache-tomcat`
-NEW_VERSION=`/opt/icinga/update-checker/applications/tomcat/update_available.sh`
+NEW_VERSION=`/opt/icinga-plugins/update-checker/applications/tomcat/update_available.sh`
 #NEW_VERSION=9.0.13
 NEW_DIR=/opt/apache-tomcat-$NEW_VERSION
 DOWNLOAD_URL="http://mirror.klaus-uwe.me/apache/tomcat/tomcat-9/v$NEW_VERSION/bin/apache-tomcat-$NEW_VERSION.tar.gz"
@@ -50,5 +50,5 @@ read
 
 rm -rf "$CURRENT_DIR"
 
-/opt/icinga/update-checker/refresh.sh
+/opt/icinga-plugins/update-checker/refresh.sh
 
