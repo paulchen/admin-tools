@@ -52,10 +52,6 @@ cd ..
 rmdir pma-new
 cp pma/config.inc.php pma-new2
 mkdir pma-new2/tmp
-chown www-data:www-data pma-new2/tmp
-cd pma-new2
-patch -p1 < $SCRIPT_DIR/pma.patch
-cd ..
 chown -R www-data:www-data pma-new2
 
 if [ "$1" != "--auto" ]; then
