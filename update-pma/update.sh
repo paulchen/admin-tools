@@ -56,12 +56,25 @@ chown www-data:www-data pma-new2/tmp
 cd pma-new2
 patch -p1 < $SCRIPT_DIR/pma.patch
 cd ..
+chown -R www-data:www-data pma-new2
 
-echo Hit any key key to perform the update...
-read
+if [ "$1" != "--auto" ]; then
+	echo Hit any key key to perform the update...
+	read
+fi
 
 mv pma pma-old
 mv pma-new2 pma
+
+if [ "$1" == "--auto" ]; then
+	echo "Finally removing old installation..."
+	rm -rf pma-old
+	echo "We're done here."
+
+	/opt/icinga-plugins/update-checker/refresh.sh
+
+	exit 0
+fi
 
 while true; do
 	echo -n "Does phpMyAdmin now work correctly [y/n]? "
