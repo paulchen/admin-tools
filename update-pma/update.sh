@@ -21,6 +21,17 @@ if [ "$INSTALLED" == "$AVAILABLE" ]; then
 	exit
 fi
 
+echo Creating backup...
+
+cd "$PMA_INSTALL_DIR"
+mkdir -p pma-backups
+BACKUP_FILE="pma-backups/backup-`date +%Y%m%d-%H%M%S`.tar.bz2"
+tar cjf "$BACKUP_FILE" pma
+
+echo Removing outdated backups...
+cd pma-backups
+ls -t | tail -n +6 | xargs -I {} rm {}
+
 echo Downloading...
 
 VERSION=$AVAILABLE
