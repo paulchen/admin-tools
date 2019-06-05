@@ -26,7 +26,7 @@ git_pull /var/www/default/web/rss-bridge >> /var/log/autoupdate.log 2>&1
 git_pull /opt/admin-tools >> /var/log/autoupdate.log 2>&1
 git_pull /opt/icinga-plugins >> /var/log/autoupdate.log 2>&1
 
-/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh > /dev/null 2>&1 || exit
+/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh > /dev/null 2>&1 || exit 0
 
 INSTALLED=`/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh`
 AVAILABLE=`/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_available.sh`
