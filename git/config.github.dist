@@ -1,0 +1,4 @@
+BASEDIR=/mnt/backup/github
+TOKEN=0ee33d6dda808ad2bc03991c35b6c72074ab2b16
+STATUSFILE=/etc/icinga/github-backup-date
+

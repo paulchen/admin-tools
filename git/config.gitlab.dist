@@ -1,0 +1,4 @@
+BASEDIR=/mnt/backup/gitlab
+TOKEN=jGiTWyMtArwzm7gikQZn
+STATUSFILE=/etc/icinga/gitlab-backup-date
+
