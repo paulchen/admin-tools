@@ -21,7 +21,7 @@ while true; do
 			git pull || ERROR=1
 		else
 			cd ..
-			git clone "git@github.com:$REPO" || ERROR=1
+			git clone "git@github.com:$REPO" 2>&1 || ERROR=1
 		fi
 	done
 
