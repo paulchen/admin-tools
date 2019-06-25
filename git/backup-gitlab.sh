@@ -18,7 +18,7 @@ while true; do
 		cd "$REPO"
 
 		if [ -e .git ]; then
-			git pull || ERROR=1
+			git pull 2>&1 || ERROR=1
 		else
 			cd ..
 			git clone "git@gitlab.com:$REPO" 2>&1 || ERROR=1
