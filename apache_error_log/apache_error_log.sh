@@ -46,6 +46,7 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'AH01618' | # user not found
 	grep -v 'AH01102' | # error reading status line from server (reverse proxy)
 	grep -v 'AH00898' | # error reading from remote server (reverse proxy)
+	grep -v 'AH01617' | # user XXX: authentication failure for "...": Password mismatch
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	"$filename" --convert |
 	sort |
