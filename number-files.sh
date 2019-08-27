@@ -12,5 +12,9 @@ if [ "$1" != "" ]; then
 	fi
 fi
 
-ls -tcr| while IFS='$\n' read -r filename; do counter=$((counter+1)); prefix=`printf "%0${width}d" $counter`; echo mv "$filename" "$prefix-$filename"; done
+ls -tcr| while IFS='$\n' read -r filename; do
+	counter=$((counter+1))
+	prefix=`printf "%0${width}d" $counter`
+	mv "$filename" "$prefix-$filename"
+done
 
