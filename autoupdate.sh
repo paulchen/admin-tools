@@ -9,7 +9,12 @@ git_pull() {
 	date
 	echo "Updating $1..."
 	cd "$1"
-	git pull
+
+	if [ "$2" != "" ]; then
+		sudo -u "$2" git pull
+	else
+		git pull
+	fi
 	echo ""
 }
 
@@ -25,6 +30,7 @@ git_pull /opt/nextcloud-munin-py >> /var/log/autoupdate.log 2>&1
 git_pull /var/www/default/web/rss-bridge >> /var/log/autoupdate.log 2>&1
 git_pull /opt/admin-tools >> /var/log/autoupdate.log 2>&1
 git_pull /opt/icinga-plugins >> /var/log/autoupdate.log 2>&1
+git_pull /home/paulchen/ipwe paulchen >> /var/log/autoupdate.log 2>&1
 
 /opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh > /dev/null 2>&1 || exit 0
 
