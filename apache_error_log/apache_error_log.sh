@@ -30,7 +30,6 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v "^[^\[]" |
 	grep -v 'client denied by server configuration' |
 	grep -v 'not found or unable to stat' |
-	grep -v ':notice' |
 	grep -v 'ssl:warn' |
 	grep -v 'No matching DirectoryIndex' |
 	grep -v 'attempt to invoke directory as script:' |
