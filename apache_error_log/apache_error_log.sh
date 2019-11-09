@@ -28,6 +28,7 @@ fi
 cd /var/
 find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v "^[^\[]" |
+	grep -v "[^p]:notice" |
 	grep -v 'client denied by server configuration' |
 	grep -v 'not found or unable to stat' |
 	grep -v 'ssl:warn' |
