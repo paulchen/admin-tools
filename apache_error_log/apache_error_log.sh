@@ -28,7 +28,7 @@ fi
 cd /var/
 find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v "^[^\[]" |
-	grep -v "[^p]:notice" |
+	grep -v "[^p7]:notice" |
 	grep -v 'client denied by server configuration' |
 	grep -v 'not found or unable to stat' |
 	grep -v 'ssl:warn' |
@@ -49,6 +49,7 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'AH01617' | # user XXX: authentication failure for "...": Password mismatch
 	grep -v 'AH01092' | # no HTTP 0.9 request (with no host line) on incoming request and preserve host
 	grep -v 'DisplayAction->execute' | # RSS bridge
+	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |
