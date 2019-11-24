@@ -50,6 +50,7 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'AH01092' | # no HTTP 0.9 request (with no host line) on incoming request and preserve host
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
+	grep -v 'max_statement_time exceeded' |
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |
