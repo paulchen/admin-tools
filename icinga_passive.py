@@ -82,10 +82,22 @@ data = {
 
 username = settings[icinga_host]['username']
 password = settings[icinga_host]['password']
-r = requests.post(request_url,
-    headers=headers,
-    auth=(username, password),
-    data=json.dumps(data))
+
+submitted = False
+for i in range(0,5):
+    try:
+        r = requests.post(request_url,
+            headers=headers,
+            auth=(username, password),
+            data=json.dumps(data))
+        submitted = True
+        break
+    except requests.exceptions.ConnectionError:
+        print('Error while submitting passive check result (iteration %s)' % (i, ))
+
+if not submitted:
+    print('Unable to submit passive check result, giving up')
+    sys.exit(3)
 
 if (r.status_code == 200):
     json = r.json()
