@@ -89,3 +89,13 @@ for domain in "${NAGIOS_CERTS[@]}"; do
         fi
 done
 
+for domain in "${NAGIOS_CERTS[@]}"; do
+        if [ "$domain" == "all" ] || [ "$domain" == "$1" ]; then
+		echo Replacing Icinga2 certificate...
+		cp "/etc/dehydrated/certs/$domain/privkey.pem" "/var/lib/icinga2/certs/$domain.key" || fail
+		cp "/etc/dehydrated/certs/$domain/fullchain.pem" "/var/lib/icinga2/certs/$domain.crt" || fail
+		chown -R nagios:nagios /var/lib/icinga2/certs || fail
+		systemctl restart icinga2 || fail
+	fi
+done
+
