@@ -89,7 +89,7 @@ for domain in "${NAGIOS_CERTS[@]}"; do
         fi
 done
 
-for domain in "${ICINGA_CERTS[@]}"; do
+for domain in "${ICINGA2_CERTS[@]}"; do
         if [ "$domain" == "all" ] || [ "$domain" == "$1" ]; then
 		echo Replacing Icinga2 certificate...
 		cp "/etc/dehydrated/certs/$domain/privkey.pem" "/var/lib/icinga2/certs/$domain.key" || fail
