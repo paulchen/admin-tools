@@ -13,6 +13,11 @@ fi
 INSTALLED=`/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh`
 AVAILABLE=`/opt/icinga-plugins/update-checker/applications/phpmyadmin/update_available.sh`
 
+if [ "$AVAILABLE" == "" ]; then
+	echo Unable to determine available version, giving up now
+	exit 1
+fi
+
 echo Currently installed version: $INSTALLED
 echo Latest available version: $AVAILABLE
 
