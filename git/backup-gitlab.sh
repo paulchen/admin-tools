@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o pipefail
+
 DIRECTORY=`dirname "$0"`
 cd "$DIRECTORY"
 
@@ -10,6 +12,10 @@ LINK="https://gitlab.com/api/v4/projects?private_token=$TOKEN&membership=yes&per
 ERROR=0
 while true; do
 	REPOS=`curl "$LINK" 2>/dev/null|python -m json.tool|grep path_with_namespace|sed -e 's/^.*: "//;s/".*$//'`
+	if [ "$?" -ne "0" ]; then
+		echo "Unable to fetch list of repositories"
+		exit 1
+	fi
 	for REPO in $REPOS; do
 		echo "Repository $REPO..."
 
@@ -29,6 +35,10 @@ while true; do
 	export IFS=','
 
 	LINKS=$(curl --head "$LINK" 2>/dev/null|grep -i '^Link:'|sed -e 's/^Link: //g')
+	if [ "$?" -ne "0" ]; then
+		echo "Unable to fetch link to next page of repositories"
+		exit 1
+	fi
 	FOUND=0
 	for CANDIDATE_LINK in $LINKS; do
 		if [ "`echo $CANDIDATE_LINK|grep -c next`" -ne "0" ]; then
