@@ -28,7 +28,7 @@ while true; do
 	IFS_OLD="$IFS"
 	export IFS=','
 
-	LINKS=$(curl --head "$LINK" 2>/dev/null|grep '^Link:'|sed -e 's/^Link: //g')
+	LINKS=$(curl --head "$LINK" 2>/dev/null|grep -i '^Link:'|sed -e 's/^Link: //g')
 	FOUND=0
 	for CANDIDATE_LINK in $LINKS; do
 		if [ "`echo $CANDIDATE_LINK|grep -c next`" -ne "0" ]; then
