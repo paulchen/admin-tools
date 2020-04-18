@@ -41,7 +41,7 @@ read
 mv postfixadmin pfa-old
 mv pfa-new/ postfixadmin
 
-echo "Run setup.py now"
+echo "Run setup.php now"
 read
 
 while true; do
