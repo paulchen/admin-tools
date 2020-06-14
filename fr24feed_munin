@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+
+import json, requests, time, sys
+
+if len(sys.argv) > 2:
+    sys.exit(1)
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == 'autoconf':
+        print("yes")
+    elif sys.argv[1] == 'config':
+        print("graph_title Aircraft tracked")
+        print("graph_args -l 0")
+        print("graph_vlabel Aircraft")
+        print("graph_category other")
+        print("graph_info Number of aircraft tracked")
+        print("aircraft.label Aircraft")
+        print("aircraft.info Number of aircraft tracked")
+    else:
+        sys.exit(2)
+else:
+    try:
+        resp = requests.get(url='http://localhost:8754/monitor.json')
+    except requests.exceptions.ConnectionError as e:
+        sys.exit(3)
+
+    data = json.loads(resp.text)
+
+    aircraft_count = int(data['d11_map_size'])
+    print('aircraft.value %s' % aircraft_count)
+
+
