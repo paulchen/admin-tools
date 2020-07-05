@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ "$1" == "autoconf" ]; then
+	echo "yes"
+	exit
+fi
+if [ "$1" == "config" ]; then
+	echo "graph_title Internet connection bandwidth"
+	echo "graph_args -l 0"
+	echo "graph_vlabel Bandwidth"
+	echo "graph_category network"
+	echo "download.label Download"
+	echo "upload.label Upload"
+	echo "graph_info Internet connection bandwidth"
+	echo "download.info Available download bandwidth"
+	echo "upload.info Available upload bandwidth"
+	exit
+fi
+
+STRING=`cat /etc/munin/speedtest-stats`
+readarray -t PARTS <<<"$STRING"
+echo "download.value ${PARTS[0]}"
+echo "upload.value ${PARTS[1]}"
+
