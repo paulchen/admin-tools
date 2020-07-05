@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$1" == "autoconf" ]; then
+	echo "yes"
+	exit
+fi
+if [ "$1" == "config" ]; then
+	echo "graph_title Average age of mails in inbox"
+	echo "graph_args -l 0"
+	echo "graph_vlabel Days"
+	echo "graph_category other"
+	echo "age.label Messages"
+	echo "graph_info Average age of mails in inbox"
+	echo "age.info Average age of mails in inbox"
+	exit
+fi
+
+AVG_AGE=`cat /etc/munin/mailbox_avg_age`
+echo "age.value $AVG_AGE"
+

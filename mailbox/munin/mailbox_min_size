@@ -1,0 +1,71 @@
+#!/usr/bin/php
+<?php
+
+if(count($argv) > 1 && $argv[1] == 'autoconf') {
+	print("yes\n");
+	die();
+}
+if(count($argv) > 1 && $argv[1] == 'config') {
+	print("graph_title Minimal mailbox size in the last 24 hours\n");
+	print("graph_args -l 0\n");
+	print("graph_vlabel Mails\n");
+	print("graph_category other\n");
+	print("size.label Mails\n");
+	print("graph_info Mailbox size\n");
+	print("size.info Mailbox size\n");
+	die();
+}
+
+require_once('/opt/admin-tools/mailbox/config.php');
+
+$db = new PDO("mysql:dbname=$db_name;host=$db_host", $db_user, $db_pass);
+
+function db_query($query, $parameters = array()) {
+	global $db;
+
+	if(!($stmt = $db->prepare($query))) {
+		$error = $db->errorInfo();
+		db_error($error[2], debug_backtrace(), $query, $parameters);
+	}
+	// see https://bugs.php.net/bug.php?id=40740 and https://bugs.php.net/bug.php?id=44639
+	foreach($parameters as $key => $value) {
+		$stmt->bindValue($key+1, $value, is_numeric($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+	}
+	if(!$stmt->execute()) {
+		$error = $stmt->errorInfo();
+		db_error($error[2], debug_backtrace(), $query, $parameters);
+	}
+	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	if(!$stmt->closeCursor()) {
+		$error = $stmt->errorInfo();
+		db_error($error[2], debug_backtrace(), $query, $parameters);
+	}
+
+	return $data;
+}
+
+function db_error($error, $stacktrace, $query, $parameters) {
+	/* TODO
+	global $report_email, $email_from;
+
+	header('HTTP/1.1 500 Internal Server Error');
+	echo "A database error has just occurred. Please don't freak out, the administrator has already been notified.\n";
+
+	$params = array(
+			'ERROR' => $error,
+			'STACKTRACE' => dump_r($stacktrace),
+			'QUERY' => $query,
+			'PARAMETERS' => dump_r($parameters),
+			'REQUEST_URI' => (isset($_SERVER) && isset($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : 'none',
+		);
+	send_mail('db_error.php', 'Database error', $params, true);
+	*/
+}
+
+$data = db_query('SELECT min(`all`) `all` FROM mailbox_size');
+$size = $data[0]['all'];
+
+echo "size.value $size\n";
+
+
+
