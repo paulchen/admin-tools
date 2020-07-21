@@ -33,6 +33,7 @@ for domain in "${IRC_CERTS[@]}"; do
 		chown -R irc:irc /etc/inspircd/ssl/ || fail
 		echo Reloading IRCd configuration due to renewal of certificate for domain $1 ...
 		"$FILEPATH/rehash_irc.sh" || fail
+		systemctl restart kiwiirc || fail
 	fi
 done
 
