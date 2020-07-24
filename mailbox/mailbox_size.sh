@@ -16,7 +16,7 @@ ages=0
 date=`date +%s`
 #for a in `ls cur/* new/* 2>/dev/null|sed -e "s/^[^\/]*\///g;s/\..*$//g"`; do
 IFS=$'\n'
-for a in `grep '^Date:' cur/* new/* 2> /dev/null|sed -e "s/.*Date: *//"`; do
+for a in `grep '^Date:[0-9a-zA-Z,: \+]*$' cur/* new/* 2> /dev/null|sed -e "s/.*Date: *//"`; do
 	unix=`date --date="$a" +%s`
 	age=$((date-unix))
 	ages=$((age+ages))
