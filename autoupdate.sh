@@ -1,5 +1,11 @@
 #!/bin/bash
 
+post_update() {
+	case "$1" in
+		/var/www/mail/roundcube/plugins/carddav/) sudo -u www-data composer install --no-dev ;;
+	esac
+}
+
 git_pull() {
 	if [ ! -e "$1" ]; then
 		return
@@ -10,11 +16,19 @@ git_pull() {
 	echo "Updating $1..."
 	cd "$1"
 
+	OLD_REVISION=`git rev-parse HEAD`
+
 	git pull
 	if [ "$2" != "" ]; then
 		chown -R "$2" .git
 	fi
 	echo ""
+
+	NEW_REVISION=`git rev-parse HEAD`
+
+	if [ "$OLD_REVISION" != "$NEW_REVISION" ]; then
+		post_update "$1"
+	fi
 }
 
 DIRECTORY=`dirname "$0"`
