@@ -89,9 +89,12 @@ for i in range(0,5):
         r = requests.post(request_url,
             headers=headers,
             auth=(username, password),
-            data=json.dumps(data))
+            data=json.dumps(data),
+            timeout=10)
         submitted = True
         break
+    except requests.exceptions.Timeout:
+        print('Timeout while submitting passive check result (iteration %s)' % (i, ))
     except requests.exceptions.ConnectionError:
         print('Error while submitting passive check result (iteration %s)' % (i, ))
 
