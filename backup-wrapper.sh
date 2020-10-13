@@ -3,7 +3,7 @@
 SUCCESS=0
 
 BACKUP_SCRIPT="$1"
-BACKUP_FILENAME="/tmp/current_backup_$2"
+BACKUP_FILENAME=`mktemp current_backup_$2.XXXXXX -p /tmp`
 LOGFILE=/var/log/backup.log
 if [ "$3" != "" ]; then
 	LOGFILE=/var/log/backup-$3.log
