@@ -50,6 +50,7 @@ git_pull /opt/ocsp_proxy/ >> /var/log/autoupdate.log 2>&1
 git_pull /opt/pisense/ >> /var/log/autoupdate.log 2>&1
 git_pull /opt/check_rpi_temp/ >> /var/log/autoupdate.log 2>&1
 git_pull /opt/nagios-rbl-check/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/dehydrated/ >> /var/log/autoupdate.log 2>&1
 
 /opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh > /dev/null 2>&1 || exit 0
 
