@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ "`whoami`" != "root" ]; then
+	sudo "$0"
+	exit
+fi
+
+ERROR=0
+/usr/lib/nagios/plugins/check_procs -w 0 -c 1 -C apt-get &> /dev/null || ERROR=1
+/usr/lib/nagios/plugins/check_procs -w 0 -c 1 -C aptitude &> /dev/null || ERROR=1
+/usr/lib/nagios/plugins/check_procs -w 0 -c 1 -C dpkg &> /dev/null || ERROR=1
+
+if [ "$ERROR" -ne "0" ]; then
+	echo "Not rebooting, some update/installation is currently running"
+	exit 1
+fi
+
+reboot
+
