@@ -57,6 +57,11 @@ if [ "$ERROR" -eq "0" ]; then
 fi
 
 if [ "$ERROR" -eq "0" ]; then
+	echo "Executing BigInt database conversion"
+	php "$DIRECTORY/occ" db:convert-filecache-bigint --no-interaction || ERROR=1
+fi
+
+if [ "$ERROR" -eq "0" ]; then
 	echo "Perform any available app updates"
 	php "$DIRECTORY/occ" app:update --all --no-interaction || ERROR=1
 fi
