@@ -34,7 +34,7 @@ while true; do
 	IFS_OLD="$IFS"
 	export IFS=','
 
-	LINKS=$(curl --head -H "Authorization: token $TOKEN" "$LINK" 2>/dev/null|grep '^Link:'|sed -e 's/^Link: //g')
+	LINKS=$(curl --head -H "Authorization: token $TOKEN" "$LINK" 2>/dev/null|grep -i '^Link:'|sed -e 's/^Link: //gi')
 	if [ "$?" -ne "0" ]; then
 		echo "Unable to fetch link to next page of repositories"
 		exit 1
