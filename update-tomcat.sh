@@ -19,6 +19,8 @@ fi
 rm -rf "$NEW_DIR"
 rm -f "$DOWNLOAD_FILE"
 
+echo Downloading new tomcat...
+
 wget "$DOWNLOAD_URL" -O "$DOWNLOAD_FILE"
 
 cd /opt
@@ -28,9 +30,13 @@ rm -f "$DOWNLOAD_FILE"
 rm -rf "$NEW_DIR/conf" "$NEW_DIR/logs"
 mkdir "$NEW_DIR/conf" "$NEW_DIR/logs"
 
+echo Stopping tomcat...
+
 systemctl stop tomcat
 
 sleep 10
+
+echo Executing update...
 
 rsync -av "$CURRENT_DIR/conf/" "$NEW_DIR/conf/"
 rsync -av "$CURRENT_DIR/logs/" "$NEW_DIR/logs/"
@@ -42,6 +48,8 @@ chown -R jenkins:jenkins "$NEW_DIR"
 
 rm -f apache-tomcat
 ln -s "$NEW_DIR" "apache-tomcat"
+
+echo Starting tomcat...
 
 systemctl start tomcat
 
