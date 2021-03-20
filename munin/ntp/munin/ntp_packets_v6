@@ -1,0 +1,73 @@
+#!/usr/bin/perl -w
+#
+# Plugin to monitor ntp packet traffic 
+#
+# Parameters understood:
+#
+# 	config   (required)
+#	autoconf
+#
+# $Id: ntp_packets 9 2007-04-11 09:43:16Z teddy $
+#
+# Magic markers - optional - used by installation scripts and
+# munin-node-configure:
+#
+#%# family=manual
+#%# capabilities=autoconf
+#
+
+use strict;
+use Net::hostent;
+use Socket;
+
+# set to absolute path if needed
+# my $ntpdc = "ntpdc -c iostats";
+my $ntpdc = "/opt/admin-tools/munin/ntp/scripts/ntp_packets_v6";
+
+# autoconf - see if this test will work
+if ($ARGV[0] and $ARGV[0] eq "autoconf") {
+	`$ntpdc`;
+	if ($? eq "0") {
+		print "yes\n";
+		exit 0;
+	} else {
+		print "no (ntpdc not found)\n";
+		exit 1;
+	}
+}
+
+if ($ARGV[0] and $ARGV[0] eq "config") {
+	print "graph_title NTP packet traffic (IPv6)\n";
+	print "graph_args --base 1000 --lower-limit 0\n";
+	print 'graph_vlabel packets per ${graph_period}'."\n";
+	print "received.label Received\n";
+	print "received.draw AREA\n";
+	print "received.type DERIVE\n";
+	print "received.min 0\n";
+	print "sent.label Sent\n";
+	print "sent.draw LINE2\n";
+	print "sent.type DERIVE\n";
+	print "sent.min 0\n";
+        exit 0;
+}
+
+sub trim($);
+
+# Perl trim function to remove whitespace from the start and end of the string
+sub trim($) {
+	my $string = shift;
+	$string =~ s/^\s+//;
+	$string =~ s/\s+$//;
+	return $string;
+}
+
+#declare vars and subroutines
+my $received = trim(`$ntpdc`);
+my $sent = $received;
+
+print "received.value $received\n";
+print "sent.value $sent\n";
+
+exit 0;
+
+# vim:syntax=perl

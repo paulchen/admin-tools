@@ -4,7 +4,7 @@ cd `dirname $0`
 . passwords.conf
 
 # Force IRC server rehash - password must match that at the bottom of /etc/inspircd/opers.conf
-username=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 32 | head -n 1)
+username=$(cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w 20 | head -n 1)
 exec 3<>/dev/tcp/localhost/6667
 echo "NICK $username" >&3
 echo "USER LetsEncrypt 0 0 :Lets Encrypt auto-update script" >&3

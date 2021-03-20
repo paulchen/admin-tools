@@ -1,0 +1,5 @@
+#!/bin/bash
+VALUE1=`ntp_packets_v4`
+VALUE2=`ntp_packets_v6`
+echo $((VALUE1 + VALUE2))
+

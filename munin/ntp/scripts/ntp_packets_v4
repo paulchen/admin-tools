@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ "$1" != "" ]; then
+	OUTPUT=`iptables -L -v -n -x|grep "spt:123"|grep "$1"|sed -e "s/  */ /g;s/^ //g"|cut -d " " -f 1`
+	if [ "$OUTPUT" == "" ]; then
+		echo 0;
+	else
+		echo $OUTPUT;
+	fi
+else
+	VALUES=`iptables -L -v -n -x|grep "spt:123"|sed -e "s/  */ /g;s/^ //g"|cut -d " " -f 1`
+	sum=0
+	for a in $VALUES; do
+		let sum=$sum+$a
+	done
+	echo $sum
+fi
+

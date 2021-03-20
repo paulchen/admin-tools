@@ -51,6 +51,7 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
 	grep -v 'max_statement_time exceeded' |
+	grep -v 'File name too long' |
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |

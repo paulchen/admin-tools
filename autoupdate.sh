@@ -1,5 +1,11 @@
 #!/bin/bash
 
+post_update() {
+	case "$1" in
+		/var/www/mail/roundcube/plugins/carddav/) sudo -u www-data composer install --no-dev ;;
+	esac
+}
+
 git_pull() {
 	if [ ! -e "$1" ]; then
 		return
@@ -10,11 +16,19 @@ git_pull() {
 	echo "Updating $1..."
 	cd "$1"
 
+	OLD_REVISION=`git rev-parse HEAD`
+
 	git pull
 	if [ "$2" != "" ]; then
 		chown -R "$2" .git
 	fi
 	echo ""
+
+	NEW_REVISION=`git rev-parse HEAD`
+
+	if [ "$OLD_REVISION" != "$NEW_REVISION" ]; then
+		post_update "$1"
+	fi
 }
 
 DIRECTORY=`dirname "$0"`
@@ -30,6 +44,14 @@ git_pull /var/www/default/web/rss-bridge >> /var/log/autoupdate.log 2>&1
 git_pull /opt/admin-tools >> /var/log/autoupdate.log 2>&1
 git_pull /opt/icinga-plugins >> /var/log/autoupdate.log 2>&1
 git_pull /home/paulchen/ipwe "paulchen:paulchen" >> /var/log/autoupdate.log 2>&1
+git_pull /opt/check_ssl_cert/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/check_sslscan/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/ocsp_proxy/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/pisense/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/check_rpi_temp/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/nagios-rbl-check/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/dehydrated/ >> /var/log/autoupdate.log 2>&1
+git_pull /opt/ddns/ >> /var/log/autoupdate.log 2>&1
 
 /opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh > /dev/null 2>&1 || exit 0
 

@@ -9,7 +9,7 @@ echo "Newest version: $NEW_VERSION"
 
 if [ "$INSTALLED_VERSION" == "$NEW_VERSION" ]; then
 	echo "Newest version already installed, nothing to do"
-#	exit
+	exit
 fi
 
 cd /var/www
@@ -41,7 +41,7 @@ read
 mv postfixadmin pfa-old
 mv pfa-new/ postfixadmin
 
-echo "Run setup.py now"
+echo "Run setup.php now"
 read
 
 while true; do
