@@ -17,12 +17,12 @@ MOUNTTIME_WARNING=95
 MOUNTTIME_CRITICAL=100
 
 for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
-	MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM|grep "Mount count"|cut -d ":" -f 2|sed "s/ //g"`
-	MAX_MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM|grep "Maximum mount count"|cut -d ":" -f 2|sed "s/ //g"`
+	MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM 2>/dev/null |grep "Mount count"|cut -d ":" -f 2|sed "s/ //g"`
+	MAX_MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM 2>/dev/null|grep "Maximum mount count"|cut -d ":" -f 2|sed "s/ //g"`
 
-	LAST_CHECK_DATE=`$TUNE2FS -l $FILESYSTEM|grep "Last checked"|cut -d ":" -f 2,3,4`
+	LAST_CHECK_DATE=`$TUNE2FS -l $FILESYSTEM 2>/dev/null|grep "Last checked"|cut -d ":" -f 2,3,4`
 	LAST_CHECK_TIMESTAMP=`date -d "$LAST_CHECK_DATE" +%s`
-	CHECK_INTERVAL=`$TUNE2FS -l $FILESYSTEM|grep "Check interval"|cut -d ":" -f 2|sed 's/^[^0-9]*//g;s/ .*$//g'`
+	CHECK_INTERVAL=`$TUNE2FS -l $FILESYSTEM 2>/dev/null|grep "Check interval"|cut -d ":" -f 2|sed 's/^[^0-9]*//g;s/ .*$//g'`
 
 	CHECK_CRITICAL_INTERVAL=$((CHECK_INTERVAL * MOUNTTIME_CRITICAL / 100))
 	CHECK_CRITICAL_TIMESTAMP=$((LAST_CHECK_TIMESTAMP+CHECK_CRITICAL_INTERVAL))
@@ -42,7 +42,10 @@ for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
 		echo -n "Filesystem: $FILESYSTEM: "
 	fi
 
-	if [ "$MAX_MOUNTCOUNT" -ne "-1" ]; then
+	if [ "$MOUNTCOUNT" == "" ] || [ "$MAX_MOUNTCOUNT" == "" ] || [ "$LAST_CHECK_DATE" == "" ] || [ "$LAST_CHECK_TIMESTAMP" == "" ]; then
+		MOUNTCOUNT_STATUS=3
+		MOUNTCOUNT_INFO="error checking filesystem"
+	elif [ "$MAX_MOUNTCOUNT" -ne "-1" ]; then
 		DIFFERENCE=$((MAX_MOUNTCOUNT-MOUNTCOUNT))
 
 		if [ $DIFFERENCE -gt $MOUNTCOUNT_WARNING ]; then
@@ -58,7 +61,10 @@ for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
 		MOUNTCOUNT_INFO="no check due to mount count required"
 	fi
 
-	if [ "$CHECK_INTERVAL" -eq 0 ]; then
+	if [ "$CHECK_INTERVAL" == "" ]; then
+		MOUNTTIME_STATUS=3
+		MOUNTTIME_INFO="error checking filesystem"
+	elif [ "$CHECK_INTERVAL" -eq 0 ]; then
 		MOUNTTIME_INFO="no check based on time required"
 	else
 		if [ "$CURRENT_TIME" -lt "$CHECK_WARNING_TIMESTAMP" ]; then
@@ -87,7 +93,9 @@ for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
 		if [ "$MOUNTTIME_STATUS" -gt "$ICINGA_STATUS" ]; then
 			ICINGA_STATUS=$MOUNTTIME_STATUS
 		fi
-		if [ "$MOUNTCOUNT_STATUS" -eq 2 -o "$MOUNTTIME_STATUS" -eq 2 ]; then
+		if [ "$MOUNTCOUNT_STATUS" -eq 3 -o "$MOUNTTIME_STATUS" -eq 3 ]; then
+			echo -n "Unable to check filesystem $FILESYSTEM; "
+		elif [ "$MOUNTCOUNT_STATUS" -eq 2 -o "$MOUNTTIME_STATUS" -eq 2 ]; then
 			echo -n "$FILESYSTEM requires a check ASAP; "
 		elif [ "$MOUNTCOUNT_STATUS" -eq 1 -o "$MOUNTTIME_STATUS" -eq 1 ]; then
 			echo -n "$FILESYSTEM requires a check soon; "
@@ -95,6 +103,8 @@ for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
 	else
 		if [ "$MOUNTCOUNT_STATUS" -eq 0 -a "$MOUNTTIME_STATUS" -eq 0 ]; then
 			echo -e "\E[01;32mno check required$(tput sgr0) ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
+		elif [ "$MOUNTCOUNT_STATUS" -lt 3 -a "$MOUNTTIME_STATUS" -lt 3 ]; then
+			echo -e "\E[01;35munable to check filesystem$(tput sgr0) ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
 		elif [ "$MOUNTCOUNT_STATUS" -lt 2 -a "$MOUNTTIME_STATUS" -lt 2 ]; then
 			echo -e "\E[01;33mcheck required$(tput sgr0) ($MOUNTCOUNT_INFO; $MOUNTTIME_INFO)"
 		else
