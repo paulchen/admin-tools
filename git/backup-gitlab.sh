@@ -7,7 +7,7 @@ cd "$DIRECTORY"
 
 . config.gitlab
 
-LINK="https://gitlab.com/api/v4/projects?private_token=$TOKEN&membership=yes&per_page=10"
+LINK="https://gitlab.com/api/v4/projects?private_token=$TOKEN&membership=yes"
 
 ERROR=0
 while true; do
