@@ -11,7 +11,7 @@ LINK="https://gitlab.com/api/v4/projects?private_token=$TOKEN&membership=yes"
 
 ERROR=0
 while true; do
-	REPOS=`curl "$LINK" 2>/dev/null|python -m json.tool|grep path_with_namespace|sed -e 's/^.*: "//;s/".*$//'`
+	REPOS=`curl "$LINK" 2>/dev/null|python3 -m json.tool|grep path_with_namespace|sed -e 's/^.*: "//;s/".*$//'`
 	if [ "$?" -ne "0" ]; then
 		echo "Unable to fetch list of repositories"
 		exit 1
