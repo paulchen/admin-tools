@@ -24,10 +24,12 @@ while true; do
 		cd "$REPO"
 
 		if [ -e .git ]; then
+			git config --get pull.rebase > /dev/null 2>&1 || git config pull.rebase false
 			git pull 2>&1 || ERROR=1
 		else
 			cd ..
 			git clone "git@github.com:$REPO" 2>&1 || ERROR=1
+			git config pull.rebase false
 		fi
 	done
 
