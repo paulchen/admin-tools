@@ -29,6 +29,8 @@ while true; do
 		else
 			cd ..
 			git clone "git@github.com:$REPO" 2>&1 || ERROR=1
+			cd "$BASEDIR"
+			cd "$REPO"
 			git config pull.rebase false
 		fi
 	done
