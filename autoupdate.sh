@@ -64,7 +64,7 @@ rm -f "$TMPLOG"
 
 ERROR=0
 
-git_pull /var/www/default/web/rss 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
+git_pull /var/www/default/web/rss "www-data:www-data" 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
 git_pull /opt/munin-contrib 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
 git_pull /var/www/mail/roundcube/plugins/carddav/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
 git_pull /var/www/default/web/rss/plugins.local/tumblr_gdpr 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
