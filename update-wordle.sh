@@ -1,5 +1,11 @@
 #!/bin/bash
 
+USER="`whoami`"
+if [ "`whoami`" != "root" ]; then
+	echo You need to run this script as root
+	exit 1
+fi
+
 cd /opt/icinga-plugins/update-checker/applications/wordle-archive
 
 INSTALLED=`./update_installed.sh`
@@ -15,11 +21,13 @@ fi
 
 cd /opt/wordle-archive
 
-git pull || exit 1
+USER="`stat -c '%U' .`"
 
-docker build . -t wordle-archive || exit 1
+sudo -u "$USER" git pull || exit 1
 
-sudo systemctl restart wordle-archive || exit 1
+sudo -u "$USER" docker build . -t wordle-archive || exit 1
 
-sudo /opt/icinga-plugins/update-checker/refresh.sh || exit 1
+systemctl restart wordle-archive || exit 1
+
+/opt/icinga-plugins/update-checker/refresh.sh || exit 1
 
