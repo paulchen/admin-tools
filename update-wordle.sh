@@ -19,6 +19,9 @@ if [ "$INSTALLED" == "$AVAILABLE" ]; then
 	exit 0
 fi
 
+docker pull archlinux:base || exit 1
+docker pull archlinux:base-devel || exit 1
+
 cd /opt/wordle-archive
 
 USER="`stat -c '%U' .`"
