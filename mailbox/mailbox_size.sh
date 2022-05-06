@@ -17,9 +17,13 @@ date=`date +%s`
 #for a in `ls cur/* new/* 2>/dev/null|sed -e "s/^[^\/]*\///g;s/\..*$//g"`; do
 IFS=$'\n'
 for a in `grep '^Date:[0-9a-zA-Z,: \+]*$' cur/* new/* 2> /dev/null|sed -e "s/.*Date: *//"`; do
-	unix=`date --date="$a" +%s`
-	age=$((date-unix))
-	ages=$((age+ages))
+	error=0
+	date --date="$a" +%s &> /dev/null || error=1
+	if [ "$error" -eq "0" ]; then
+		unix=`date --date="$a" +%s`
+		age=$((date-unix))
+		ages=$((age+ages))
+	fi
 done
 if [ "$count" -eq "0" ]; then
 	AVERAGE_AGE=0
