@@ -15,8 +15,12 @@ echo "Installed: $INSTALLED"
 echo "Available: $AVAILABLE"
 
 if [ "$INSTALLED" == "$AVAILABLE" ]; then
-	echo "Nothing to do"
-	exit 0
+	if [ "$1" != "-f" ]; then
+		echo "Nothing to do"
+		exit 0
+	else
+		echo "Forced update although code base is unchanged"
+	fi
 fi
 
 docker pull archlinux:base || exit 1
