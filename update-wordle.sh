@@ -32,7 +32,7 @@ USER="`stat -c '%U' .`"
 
 sudo -u "$USER" git pull || exit 1
 
-sudo -u "$USER" docker build . -t wordle-archive || exit 1
+sudo -u "$USER" docker build . -t wordle-archive --no-cache || exit 1
 
 systemctl restart wordle-archive || exit 1
 
