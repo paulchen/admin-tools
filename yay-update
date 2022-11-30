@@ -1,0 +1,4 @@
+#!/bin/bash
+
+yay --nocleanmenu --nodiffmenu --noupgrademenu -Syu
+
