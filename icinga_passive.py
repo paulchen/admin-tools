@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 
-import requests, json, sys, time, getopt, shlex, subprocess, configparser, os
+import requests, json, sys, time, getopt, shlex, subprocess, configparser, os, datetime
 
 def usage():
-    print('Usage: passive.py -H <host> -S <service> -C <command> -N <icinga host>')
+    log('Usage: passive.py -H <host> -S <service> -C <command> -N <icinga host>')
+
+
+def log(message):
+    date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print("[%s] %s" % (date, message))
+    sys.stdout.flush()
 
 
 try:
@@ -42,17 +48,19 @@ settings = configparser.ConfigParser()
 settings.read(configfile)
 
 if icinga_host not in settings or 'username' not in settings[icinga_host] or 'password' not in settings[icinga_host]:
-    print('Configuration file %s not found or invalid' % configfile)
+    log('Configuration file %s not found or invalid' % configfile)
     sys.exit(3)
 
 request_url = "https://%s:5665/v1/actions/process-check-result" % icinga_host
+
+log("Executing check for service %s on host %s" % (service, host))
 
 command_args = shlex.split(command)
 
 execution_start = round(time.time())
 out = subprocess.Popen(command_args, stderr = subprocess.STDOUT, stdout = subprocess.PIPE)
 output = out.communicate()[0].strip().decode('UTF-8')
-print(output)
+log(output)
 execution_end = round(time.time())
 
 parts = output.split('|')
@@ -82,20 +90,35 @@ data = {
 
 username = settings[icinga_host]['username']
 password = settings[icinga_host]['password']
-r = requests.post(request_url,
-    headers=headers,
-    auth=(username, password),
-    data=json.dumps(data))
+
+submitted = False
+for i in range(0,5):
+    try:
+        r = requests.post(request_url,
+            headers=headers,
+            auth=(username, password),
+            data=json.dumps(data),
+            timeout=10)
+        submitted = True
+        break
+    except requests.exceptions.Timeout:
+        log('Timeout while submitting passive check result (iteration %s)' % (i, ))
+    except requests.exceptions.ConnectionError:
+        log('Error while submitting passive check result (iteration %s)' % (i, ))
+
+if not submitted:
+    log('Unable to submit passive check result, giving up')
+    sys.exit(3)
 
 if (r.status_code == 200):
     json = r.json()
     result = json['results'][0]
     if result['code'] == 200:
-        print('Status for service "%s" on host "%s" sent successfully' % (service, host))
+        log('Status for service "%s" on host "%s" sent successfully' % (service, host))
     else:
-        print('Application error %s when sending status for service "%s" on host "%s": %s' % (int(result['code']), service, host, result['status']))
+        log('Application error %s when sending status for service "%s" on host "%s": %s' % (int(result['code']), service, host, result['status']))
         sys.exit(2)
 else:
-    print('HTTP error %s while sending status for service "%s" on host "%s"' % (r.status_code, service, host))
+    log('HTTP error %s while sending status for service "%s" on host "%s"' % (r.status_code, service, host))
     sys.exit(1)
 

@@ -3,7 +3,7 @@
 SUCCESS=0
 
 BACKUP_SCRIPT="$1"
-BACKUP_FILENAME="/tmp/current_backup_$2"
+BACKUP_FILENAME=`mktemp current_backup_$2.XXXXXX -p /tmp`
 LOGFILE=/var/log/backup.log
 if [ "$3" != "" ]; then
 	LOGFILE=/var/log/backup-$3.log
@@ -20,10 +20,10 @@ if [ "$SUCCESS" -ne "1" ]; then
 	echo Error running backup script
 	cat "$BACKUP_FILENAME"
 
-	rm -f "/var/backup-states/succcess_$2"
+	rm -f "/var/backup-states/success_$2"
 else
 	touch "/var/backup-states/last_$2"
-	touch "/var/backup-states/succcess_$2"
+	touch "/var/backup-states/success_$2"
 fi
 rm -f "$BACKUP_FILENAME"
 

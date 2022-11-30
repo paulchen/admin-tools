@@ -28,7 +28,7 @@ fi
 cd /var/
 find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v "^[^\[]" |
-	grep -v "[^p]:notice" |
+	grep -v "[^p7]:notice" |
 	grep -v 'client denied by server configuration' |
 	grep -v 'not found or unable to stat' |
 	grep -v 'ssl:warn' |
@@ -48,7 +48,18 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'AH00898' | # error reading from remote server (reverse proxy)
 	grep -v 'AH01617' | # user XXX: authentication failure for "...": Password mismatch
 	grep -v 'AH01092' | # no HTTP 0.9 request (with no host line) on incoming request and preserve host
+	grep -v 'AH01977' | # failed reading line from OCSP server
+	grep -v 'AH01980' | # bad response from OCSP server
+	grep -v 'AH01941' | # stapling_renew_response: responder error
 	grep -v 'DisplayAction->execute' | # RSS bridge
+	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
+	grep -v 'max_statement_time exceeded' |
+	grep -v 'File name too long' |
+	grep -v '\.\.\/'   | # CVE-2021-41773 attack
+	grep -v '\.%2e\/'  | # CVE-2021-41773 attack
+	grep -v '%2e%2e\/' | # CVE-2021-41773 attack
+	grep -v '%%32%65'  | # CVE-2021-42013 attack
+	grep -v 'Primary script unknown' | # php-fpm "404"
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |

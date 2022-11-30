@@ -4,6 +4,10 @@ UPDATE_FILE=/tmp/dehydrated-updates
 LOG_FILE=/tmp/dehydrated-logs
 ERROR_FILE=/tmp/dehydrated-error
 
+DIRECTORY="`dirname $0`"
+cd "$DIRECTORY"
+STATUS_FILE="`pwd`/last_update"
+
 QUIET=0
 if [ "$1" == "-q" ]; then
 	QUIET=1
@@ -53,5 +57,9 @@ fi
 rm -f $LOG_FILE
 rm -f $UPDATE_FILE
 rm -f $ERROR_FILE
+
+if [ "$EXIT_CODE" -eq "0" ]; then
+	touch "$STATUS_FILE"
+fi
 
 exit $EXIT_CODE

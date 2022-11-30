@@ -1,1 +1,4 @@
 icinga_passive.properties
+autoupdate.status
+nextcloud.conf
+munin/speedtest/last-speedtest-update

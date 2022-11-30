@@ -30,7 +30,11 @@ deploy_cert() {
 
     /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN || fail
 
-    for host in alniyat girtab gamma.rueckgr.at; do
+    if [ ! -f /etc/dehydrated/remote-hosts ]; then
+        return
+    fi
+
+    for host in `cat /etc/dehydrated/remote-hosts`; do
         rsync -av /etc/dehydrated/certs/ $host:/etc/dehydrated/certs/ || fail
 	ssh $host /opt/admin-tools/dehydrated/deploy_cert.sh $DOMAIN || fail
     done

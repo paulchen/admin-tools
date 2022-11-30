@@ -5,4 +5,5 @@ POSTFIX_CERTS=(mail.rueckgr.at)
 DOVECOT_CERTS=(mail.rueckgr.at)
 XMPP_CERTS=(jabber.rueckgr.at)
 NAGIOS_CERTS=(rueckgr.at)
+ICINGA2_CERTS=()
 
