@@ -51,6 +51,7 @@ find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v 'AH01977' | # failed reading line from OCSP server
 	grep -v 'AH01980' | # bad response from OCSP server
 	grep -v 'AH01941' | # stapling_renew_response: responder error
+	grep -v 'AH10291' | # h2_workers: cleanup, x idle workers did not exit after y seconds
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
 	grep -v 'max_statement_time exceeded' |
