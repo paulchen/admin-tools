@@ -25,8 +25,7 @@ if [ "$1" == "--convert" ]; then
 fi
 
 
-cd /var/
-find . \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
+find /var/www /var/log \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
 	grep -v "^[^\[]" |
 	grep -v "[^p7]:notice" |
 	grep -v 'client denied by server configuration' |
