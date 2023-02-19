@@ -26,13 +26,13 @@ bin/installto.sh /var/www/mail/roundcube/
 cd /tmp
 rm -rf "roundcubemail-$AVAILABLE"
 
+cd /var/www/mail
+
+chown -R www-data:www-data roundcube
+
 cd /var/www/mail/roundcube
+
 sudo -u www-data php composer.phar self-update
 sudo -u www-data php composer.phar update --no-dev
 
-cd /var/www/mail/roundcube/plugins/carddav
-sudo -u www-data php composer.phar self-update
-sudo -u www-data php composer.phar update --no-dev
-
-/opt/icinga-plugins/update-checker/refresh.sh
 

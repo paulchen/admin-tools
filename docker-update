@@ -22,11 +22,28 @@ if [ "$ERROR" -ne "0" ]; then
 	exit 1
 fi
 
+UPDATES=""
+
+for pkg in $PACKAGES; do
+	INSTALLED=`apt-cache policy "$pkg" | grep 'Installed' | sed -e 's/.*: //'`
+	CANDIDATE=`apt-cache policy "$pkg" | grep 'Candidate' | sed -e 's/.*: //'`
+
+	if [ "$INSTALLED" != "$CANDIDATE" ]; then
+		echo "Package $pkg needs to be updated from $INSTALLED to $CANDIDATE"
+		UPDATES="$UPDATES $pkg"
+	fi
+done
+
+if [ "$UPDATES" == "" ]; then
+	echo "No update available"
+	exit
+fi
+
 for pkg in $PACKAGES; do hold $pkg install; done
 
 apt update
 
-apt install -y --reinstall $PACKAGES
+apt install -y --reinstall $UPDATES
 
 for pkg in $PACKAGES; do hold $pkg hold; done
 
