@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yay --nocleanmenu --nodiffmenu --noupgrademenu -Syu
+LC_ALL=C yay --nocleanmenu --nodiffmenu --noupgrademenu -Syu
 
