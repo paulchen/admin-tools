@@ -63,6 +63,7 @@ find /var/www /var/log \( -name error.log -or -name error.log.1 \) -exec cat {} 
 	grep -v '%%32%65'  | # CVE-2021-42013 attack
 	grep -v 'Primary script unknown' | # php-fpm "404"
 	grep -v 'h2_stream.*CLEANUP' | # https://www.apachelounge.com/viewtopic.php?p=41794
+	grep -v 'guest token' | # RSS-Bridge's TwitterBridge
 	"$filename" --convert |
 	sort |
 	sed -e "s/^[^ ]* //" |
