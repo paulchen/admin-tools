@@ -26,7 +26,7 @@ fi
 
 
 find /var/www /var/log \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
-	grep -v "^[^\[]" |
+	grep -v --text "^[^\[]" |
 	grep -v "[^p7]:notice" |
 	grep -v 'client denied by server configuration' |
 	grep -v 'not found or unable to stat' |
