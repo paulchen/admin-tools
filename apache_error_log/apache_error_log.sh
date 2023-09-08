@@ -25,8 +25,9 @@ if [ "$1" == "--convert" ]; then
 fi
 
 
-find /var/www /var/log \( -name error.log -or -name error.log.1 \) -exec cat {} \; |
-	grep -v --text "^[^\[]" |
+find /var/www /var/log \( -name error.log -or -name error.log.1 -or -name container-error.log -or -name container-error.log.1 \) -exec cat {} \; |
+	grep --text "\[[A-Z][a-z][a-z]" |
+	sed -e "s/.*\(\[[A-Z][a-z][a-z] \)/\1/" |
 	grep -v "[^p7]:notice" |
 	grep -v 'client denied by server configuration' |
 	grep -v 'not found or unable to stat' |
