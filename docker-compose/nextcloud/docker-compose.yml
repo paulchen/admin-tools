@@ -1,0 +1,52 @@
+version: "3.7"
+services:
+  nextcloud:
+    image: nextcloud:${NEXTCLOUD_VERSION}
+    container_name: nextcloud
+    restart: always
+    volumes:
+      - /var/www/cloud:/var/www/html
+      - /mnt/cloud:/data
+    networks:
+      - nextcloud
+    ports:
+      - 127.0.0.1:9000:9000
+    entrypoint: ["/bin/bash", "-c" , "apt-get update && apt-get -y install --no-install-recommends sudo && /entrypoint.sh php-fpm"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+      test: sudo -u www-data php occ status -e || exit 1
+      interval: 5m
+      timeout: 10s 
+  cron:
+    image: nextcloud:${NEXTCLOUD_VERSION}
+    container_name: nextcloud-cron
+    restart: unless-stopped
+    volumes:
+      - /var/www/cloud:/var/www/html
+      - /mnt/cloud:/data
+    networks:
+      - nextcloud
+    entrypoint: ["/bin/bash", "-c" , "apt-get update && apt-get -y install --no-install-recommends sudo && /cron.sh"]
+    depends_on:
+      - nextcloud
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+      test: sudo -u www-data php occ status -e || exit 1
+      interval: 5m
+      timeout: 10s 
+
+networks:
+  nextcloud:
+    external: True
+
+
