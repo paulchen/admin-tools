@@ -12,8 +12,8 @@ RemainAfterExit=true
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker pull dbgate/dbgate:${DBGATE_VERSION}
 
-ExecStart=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/dbgate/docker-compose.yml --env-file /etc/default/dbgate up -d --remove-orphans
-ExecStop=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/dbgate/docker-compose.yml --env-file /etc/default/dbgate down
+ExecStart=docker compose -f /opt/admin-tools/docker-compose/dbgate/docker-compose.yml --env-file /etc/default/dbgate up -d --remove-orphans
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/dbgate/docker-compose.yml --env-file /etc/default/dbgate down
 
 [Install]
 WantedBy=multi-user.target

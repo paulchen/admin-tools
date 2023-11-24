@@ -12,8 +12,8 @@ RemainAfterExit=true
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker pull nextcloud:${NEXTCLOUD_VERSION}
 
-ExecStart=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/nextcloud/docker-compose.yml --env-file /etc/default/nextcloud up -d --remove-orphans
-ExecStop=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/nextcloud/docker-compose.yml --env-file /etc/default/nextcloud down
+ExecStart=docker compose -f /opt/admin-tools/docker-compose/nextcloud/docker-compose.yml --env-file /etc/default/nextcloud up -d --remove-orphans
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/nextcloud/docker-compose.yml --env-file /etc/default/nextcloud down
 
 [Install]
 WantedBy=multi-user.target
