@@ -14,8 +14,8 @@ RemainAfterExit=true
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker pull rocketchat/rocket.chat:${ROCKETCHAT_VERSION}
 
-ExecStart=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/rocketchat/docker-compose.yml --env-file /etc/default/rocketchat up -d --remove-orphans
-ExecStop=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/rocketchat/docker-compose.yml --env-file /etc/default/rocketchat down
+ExecStart=docker compose -f /opt/admin-tools/docker-compose/rocketchat/docker-compose.yml --env-file /etc/default/rocketchat up -d --remove-orphans
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/rocketchat/docker-compose.yml --env-file /etc/default/rocketchat down
 
 [Install]
 WantedBy=multi-user.target

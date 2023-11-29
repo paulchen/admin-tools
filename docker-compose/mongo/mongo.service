@@ -11,8 +11,8 @@ Type=oneshot
 RemainAfterExit=true
 ExecStartPre=-/usr/bin/docker pull mongo:${MONGO_VERSION}
 
-ExecStart=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/mongo/docker-compose.yml --env-file /etc/default/mongo up -d --remove-orphans
-ExecStop=/usr/local/bin/docker-compose -f /opt/admin-tools/docker-compose/mongo/docker-compose.yml --env-file /etc/default/mongo down
+ExecStart=docker compose -f /opt/admin-tools/docker-compose/mongo/docker-compose.yml --env-file /etc/default/mongo up -d --remove-orphans
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/mongo/docker-compose.yml --env-file /etc/default/mongo down
 
 
 [Install]
