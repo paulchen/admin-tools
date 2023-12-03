@@ -35,4 +35,5 @@ cd /var/www/mail/roundcube
 sudo -u www-data php composer.phar self-update
 sudo -u www-data php composer.phar update --no-dev
 
+/opt/icinga-plugins/update-checker/refresh.sh
 

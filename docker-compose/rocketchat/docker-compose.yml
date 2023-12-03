@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  rocketchat:
+    image: rocketchat/rocket.chat:${ROCKETCHAT_VERSION}
+    container_name: rocketchat
+    env_file: /etc/default/rocketchat
+    ports:
+      - "127.0.0.1:3000:3000"
+      - "[::1]:3000:3000"
+    volumes:
+      - /var/lib/rocketchat/uploads:/app/uploads
+    environment:
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local?directConnection=true
+      - MONGO_URL=mongodb://mongo:27017/rocketchat?directConnection=true
+      - ROOT_URL=https://chat.rueckgr.at
+    networks:
+      - rocketchat_default
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+      # https://github.com/RocketChat/Docker.Official.Image/issues/107#issuecomment-900035791
+      test: >
+         /usr/local/bin/node -e '
+         const http = require("http");
+         const options = {
+           host: "localhost",
+           port: 3000,
+           path: "/api/info",
+           timeout: 2000
+         };
+         const healthCheck = http.request(options, (res) => {
+           console.log(`HEALTHCHECK STATUS: $${res.statusCode}`);
+           if (res.statusCode == 200) {
+             process.exit(0);
+           } else {
+             process.exit(1);
+           }
+         });
+         healthCheck.on("error", function (err) {
+           console.error("ERROR");
+           process.exit(1);
+         });
+         healthCheck.end();' || exit 1
+      interval: 1m
+      timeout: 10s 
+
+networks:
+  rocketchat_default:
+    external: True

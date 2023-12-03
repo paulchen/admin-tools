@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  dbgate:
+    image: dbgate/dbgate:${DBGATE_VERSION}
+    container_name: dbgate
+    env_file: /etc/default/dbgate
+    ports:
+      - "127.0.0.1:42777:3000"
+    networks:
+      - rocketchat_default
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+      test: curl http://localhost:3000/ || exit 1
+      interval: 1m
+      timeout: 10s 
+
+networks:
+  rocketchat_default:
+    external: True

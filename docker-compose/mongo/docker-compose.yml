@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+  mongo:
+    image: mongo:${MONGO_VERSION}
+    command: mongod --oplogSize 128 --replSet rs0 --storageEngine=wiredTiger
+    container_name: mongo
+    env_file: /etc/default/mongo
+    volumes:
+      - /var/lib/rocketchat/mongodb/db:/data/db
+      - /var/lib/rocketchat/mongodb/dump:/data/dump
+      - /mnt/backup/mongodb/dump:/backup
+    networks:
+      - rocketchat_default
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+#      https://github.com/docker-library/healthcheck/blob/master/mongo/docker-healthcheck
+      test: "mongosh --quiet 'localhost/test' --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' || exit 1"
+      interval: 1m
+      timeout: 10s 
+
+networks:
+  rocketchat_default:
+    external: True

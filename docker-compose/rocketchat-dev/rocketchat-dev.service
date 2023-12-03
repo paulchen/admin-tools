@@ -1,0 +1,22 @@
+[Unit]
+Description=rocketchat-dev
+Requires=docker.service
+Requires=mongo.service
+After=docker.service
+After=mongo.service
+
+[Service]
+EnvironmentFile=/etc/environment
+EnvironmentFile=/etc/default/rocketchat-dev
+User=root
+Type=oneshot
+RemainAfterExit=true
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker pull rocketchat/rocket.chat:${ROCKETCHAT_VERSION}
+
+ExecStart=docker compose -f /opt/admin-tools/docker-compose/rocketchat-dev/docker-compose.yml --env-file /etc/default/rocketchat-dev up -d --remove-orphans
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/rocketchat-dev/docker-compose.yml --env-file /etc/default/rocketchat-dev down
+
+[Install]
+WantedBy=multi-user.target
+
