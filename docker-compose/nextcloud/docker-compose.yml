@@ -7,6 +7,7 @@ services:
     volumes:
       - /var/www/cloud:/var/www/html
       - /mnt/cloud:/data
+      - /var/run/mysqld:/var/run/mysqld
     networks:
       - nextcloud
     ports:
@@ -29,6 +30,7 @@ services:
     volumes:
       - /var/www/cloud:/var/www/html
       - /mnt/cloud:/data
+      - /var/run/mysqld:/var/run/mysqld
     networks:
       - nextcloud
     entrypoint: ["/bin/bash", "-c" , "apt-get update && apt-get -y install --no-install-recommends sudo && /cron.sh"]
