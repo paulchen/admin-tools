@@ -1,0 +1,19 @@
+[Unit]
+Description=kotlin-rocket-bot
+Requires=docker.service
+Requires=postgresql.service
+After=docker.service
+
+[Service]
+EnvironmentFile=/etc/environment
+User=root
+Type=oneshot
+RemainAfterExit=true
+TimeoutStartSec=0
+
+ExecStart=/opt/admin-tools/docker-compose/kotlin-rocket-bot/start.sh
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/kotlin-rocket-bot/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target
+

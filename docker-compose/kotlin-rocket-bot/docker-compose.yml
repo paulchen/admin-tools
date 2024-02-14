@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+  rocketchat:
+    image: kotlin-rocket-bot:latest
+    container_name: kotlin-rocket-bot
+    ports:
+      - "127.0.0.1:8081:8082"
+      - "127.0.0.1:5006:5005"
+      - "127.0.0.1:9010:9010"
+      - "127.0.0.1:9011:9011"
+    volumes:
+      - /etc/kotlin-rocket-bot:/config
+      - /var/cache/kotlin-rocket-bot:/cache
+      - /var/run/postgresql:/var/run/postgresql
+    environment:
+      - TZ=Europe/Vienna
+      - DOCKER_VERSION=${DOCKER_VERSION}
+      - LINUX_VERSION=${LINUX_VERSION}
+    networks:
+      - rocketchat_default
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+
+networks:
+  rocketchat_default:
+    external: True
