@@ -7,6 +7,12 @@ cd "$DIRECTORY"
 
 . config.gitlab
 
+if [ "$FILEAGE_SCRIPT" != "" ]; then
+	if [ -f "$FILEAGE_SCRIPT" ]; then
+		"$FILEAGE_SCRIPT" -f "$STATUSFILE" -w 1000 -c 1200 && exit
+	fi
+fi
+
 LINK="https://gitlab.com/api/v4/projects?private_token=$TOKEN&membership=yes"
 
 ERROR=0

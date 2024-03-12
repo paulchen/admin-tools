@@ -1,4 +1,5 @@
 BASEDIR=/mnt/backup/github
 TOKEN=
 STATUSFILE=/etc/icinga/github-backup-date
+FILEAGE_SCRIPT=/opt/icinga-plugins/check_fileage.py
 

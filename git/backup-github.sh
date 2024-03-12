@@ -7,6 +7,12 @@ cd "$DIRECTORY"
 
 . config.github
 
+if [ "$FILEAGE_SCRIPT" != "" ]; then
+	if [ -f "$FILEAGE_SCRIPT" ]; then
+		"$FILEAGE_SCRIPT" -f "$STATUSFILE" -w 1000 -c 1200 && exit
+	fi
+fi
+
 LINK="https://api.github.com/user/repos?per_page=10"
 
 ERROR=0
