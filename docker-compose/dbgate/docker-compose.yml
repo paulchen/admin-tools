@@ -6,6 +6,9 @@ services:
     env_file: /etc/default/dbgate
     ports:
       - "127.0.0.1:42777:3000"
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
+      - /var/run/mysqld:/var/run/mysqld
     networks:
       - rocketchat_default
     logging:
