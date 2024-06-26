@@ -16,7 +16,7 @@ MOUNTCOUNT_CRITICAL=0
 MOUNTTIME_WARNING=95
 MOUNTTIME_CRITICAL=100
 
-for FILESYSTEM in `mount|egrep "ext[234]"|cut -d " " -f 1`; do
+for FILESYSTEM in `mount|grep -e "ext[234]"|cut -d " " -f 1`; do
 	MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM 2>/dev/null |grep "Mount count"|cut -d ":" -f 2|sed "s/ //g"`
 	MAX_MOUNTCOUNT=`$TUNE2FS -l $FILESYSTEM 2>/dev/null|grep "Maximum mount count"|cut -d ":" -f 2|sed "s/ //g"`
 
