@@ -1,4 +1,5 @@
 BASEDIR=/mnt/backup/gitlab
 TOKEN=
 STATUSFILE=/etc/icinga/gitlab-backup-date
+FILEAGE_SCRIPT=/opt/icinga-plugins/check_fileage.py
 

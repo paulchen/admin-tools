@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   nextcloud:
     image: nextcloud:${NEXTCLOUD_VERSION}
@@ -7,6 +6,7 @@ services:
     volumes:
       - /var/www/cloud:/var/www/html
       - /mnt/cloud:/data
+      - /var/run/mysqld:/var/run/mysqld
     networks:
       - nextcloud
     ports:
@@ -29,6 +29,7 @@ services:
     volumes:
       - /var/www/cloud:/var/www/html
       - /mnt/cloud:/data
+      - /var/run/mysqld:/var/run/mysqld
     networks:
       - nextcloud
     entrypoint: ["/bin/bash", "-c" , "apt-get update && apt-get -y install --no-install-recommends sudo && /cron.sh"]
@@ -44,6 +45,16 @@ services:
       test: sudo -u www-data php occ status -e || exit 1
       interval: 5m
       timeout: 10s 
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: nextcloud-redis
+    restart: always
+    networks:
+      - nextcloud
+    healthcheck:
+      test: redis-cli --raw incr ping || exit 1
+      interval: 5m
+      timeout: 10s
 
 networks:
   nextcloud:

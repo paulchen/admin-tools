@@ -37,8 +37,12 @@ echo "Installed: $INSTALLED"
 echo "Available: $AVAILABLE"
 
 if [ "$INSTALLED" == "$AVAILABLE" ]; then
-	echo "Nothing to do"
-	exit 0
+	UPDATE=0
+	echo "mongo:$INSTALLED" | /opt/icinga-plugins/docker/check_tags.sh - || UPDATE=1
+	if [ "$UPDATE" -eq "0" ]; then
+		echo "Nothing to do"
+		exit 0
+	fi
 fi
 
 docker pull "mongo:$AVAILABLE" || exit 1

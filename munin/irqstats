@@ -103,6 +103,7 @@ while (my $line = <$in>) {
     if ($sun) {
 	@data = split (' ', $line, $cpus + 2);
     } else {
+	$line =~ s/\:/\: /;
 	@data = split(' ', $line, $cpus + 3);
     }
     chomp @data;
