@@ -18,7 +18,8 @@ services:
 #      https://github.com/docker-library/healthcheck/blob/master/mongo/docker-healthcheck
       test: "mongosh --quiet 'localhost/test' --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)' || exit 1"
       interval: 1m
-      timeout: 10s 
+      timeout: 10s
+      start_period: 10s 
 
 networks:
   rocketchat_default:
