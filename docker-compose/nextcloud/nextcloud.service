@@ -11,6 +11,7 @@ Type=oneshot
 RemainAfterExit=true
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker pull nextcloud:${NEXTCLOUD_VERSION}
+ExecStartPre=-/usr/bin/docker pull redis:${REDIS_VERSION}
 
 ExecStart=docker compose -f /opt/admin-tools/docker-compose/nextcloud/docker-compose.yml --env-file /etc/default/nextcloud up -d --remove-orphans
 ExecStop=docker compose -f /opt/admin-tools/docker-compose/nextcloud/docker-compose.yml --env-file /etc/default/nextcloud down
