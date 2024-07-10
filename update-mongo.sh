@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DIRECTORY=`realpath "$0"`
+DIRECTORY=`dirname "$DIRECTORY"`
+
 stop_unit() {
 	UNIT=$1
 	echo "Stopping $1..."
@@ -52,14 +55,19 @@ stop_unit docker-munin-mongodb
 stop_unit rocketchat-archive
 stop_unit kotlin-rocket-bot
 stop_unit rocketchat
+
+"$DIRECTORY/backup.mongo.sh" || exit 1
+
 stop_unit mongo
 
 echo "MONGO_VERSION=$AVAILABLE" > /etc/default/mongo
 
+echo "Waiting 15 seconds"
 sleep 15
 
 start_unit mongo
 
+echo "Waiting 20 seconds"
 sleep 20
 
 start_unit rocketchat
