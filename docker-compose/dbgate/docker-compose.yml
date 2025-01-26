@@ -10,6 +10,7 @@ services:
       - /var/run/mysqld:/var/run/mysqld
     networks:
       - rocketchat_default
+      - torstatus
     logging:
       driver: "journald"
       options:
@@ -22,3 +23,6 @@ services:
 networks:
   rocketchat_default:
     external: True
+  torstatus:
+    external: True
+
