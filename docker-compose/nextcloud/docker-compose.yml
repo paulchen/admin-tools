@@ -1,7 +1,10 @@
 services:
   nextcloud:
-    image: nextcloud:${NEXTCLOUD_VERSION}
-    container_name: nextcloud
+    build:
+      context: nextcloud-custom
+      args:
+        NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}
+    container_name: nextcloud-cloud
     restart: always
     volumes:
       - /var/www/cloud:/var/www/html
@@ -11,7 +14,6 @@ services:
       - nextcloud
     ports:
       - 127.0.0.1:9000:9000
-    entrypoint: ["/bin/bash", "-c" , "apt-get update && apt-get -y install --no-install-recommends sudo && /entrypoint.sh php-fpm"]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     logging:
@@ -23,7 +25,10 @@ services:
       interval: 5m
       timeout: 10s 
   cron:
-    image: nextcloud:${NEXTCLOUD_VERSION}
+    build:
+      context: nextcloud-custom
+      args:
+        NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}
     container_name: nextcloud-cron
     restart: unless-stopped
     volumes:
@@ -32,7 +37,7 @@ services:
       - /var/run/mysqld:/var/run/mysqld
     networks:
       - nextcloud
-    entrypoint: ["/bin/bash", "-c" , "apt-get update && apt-get -y install --no-install-recommends sudo && /cron.sh"]
+    entrypoint: [ "/cron.sh" ]
     depends_on:
       - nextcloud
     extra_hosts:
