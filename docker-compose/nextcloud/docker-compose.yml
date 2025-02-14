@@ -31,6 +31,7 @@ services:
         NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}
     container_name: nextcloud-cron
     restart: unless-stopped
+    init: true
     volumes:
       - /var/www/cloud:/var/www/html
       - /mnt/cloud:/data
