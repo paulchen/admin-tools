@@ -4,6 +4,7 @@ services:
       context: nextcloud-custom
       args:
         NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}
+    image: nextcloud-custom:${NEXTCLOUD_VERSION}
     container_name: nextcloud-cloud
     restart: always
     volumes:
@@ -25,10 +26,8 @@ services:
       interval: 5m
       timeout: 10s 
   cron:
-    build:
-      context: nextcloud-custom
-      args:
-        NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}
+    image: nextcloud-custom:${NEXTCLOUD_VERSION}
+    pull_policy: never
     container_name: nextcloud-cron
     restart: unless-stopped
     init: true
