@@ -13,6 +13,8 @@ services:
       - /var/run/mysqld:/var/run/mysqld
     networks:
       - nextcloud
+    depends_on:
+      - redis
     ports:
       - 127.0.0.1:9000:9000
     extra_hosts:
@@ -60,6 +62,7 @@ services:
       test: redis-cli --raw incr ping || exit 1
       interval: 5m
       timeout: 10s
+      start_interval: 10s
 
 networks:
   nextcloud:
