@@ -1,0 +1,65 @@
+services:
+  app:
+    image: cthulhoo/ttrss-fpm-pgsql-static:latest
+    restart: unless-stopped
+    env_file:
+      - /etc/tt-rss/tt-rss.conf
+    volumes:
+      - app:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ttrss
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+      test: if [ "`ps|grep -c php-fpm84`" -le "1" ]; then exit 1; else exit 0; fi
+
+  web-nginx:
+    image: cthulhoo/ttrss-web-nginx:latest
+    restart: unless-stopped
+    env_file:
+      - /etc/tt-rss/tt-rss.conf
+    ports:
+      - 127.0.0.1:8280:80
+    volumes:
+      - app:/var/www/html:ro
+    depends_on:
+      - app
+    networks:
+      - ttrss
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+
+  updater:
+    image: cthulhoo/ttrss-fpm-pgsql-static:latest
+    restart: unless-stopped
+    env_file:
+      - /etc/tt-rss/tt-rss.conf
+    volumes:
+      - app:/var/www/html
+    depends_on:
+      - app
+    command: /opt/tt-rss/updater.sh
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ttrss
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    healthcheck:
+      test: if [ "`ps|grep -c updater.sh`" -le "1" ]; then exit 1; else exit 0; fi
+
+volumes:
+  app:
+
+networks:
+  ttrss:
+    external: True
+

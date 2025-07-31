@@ -1,0 +1,21 @@
+[Unit]
+Description=Tiny Tiny RSS
+Requires=docker.service
+Requires=postgresql.service
+After=docker.service
+After=postgresql.service
+
+[Service]
+User=root
+Type=oneshot
+RemainAfterExit=true
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker pull cthulhoo/ttrss-fpm-pgsql-static:latest
+ExecStartPre=-/usr/bin/docker pull cthulhoo/ttrss-web-nginx:latest
+
+ExecStart=docker compose -f /opt/admin-tools/docker-compose/tt-rss/docker-compose.yml up -d --remove-orphans
+ExecStop=docker compose -f /opt/admin-tools/docker-compose/tt-rss/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target
+
