@@ -63,6 +63,7 @@ services:
       interval: 5m
       timeout: 10s
       start_interval: 10s
+      start_period: 10s
 
 networks:
   nextcloud:
