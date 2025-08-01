@@ -1,6 +1,6 @@
 services:
   rocketchat:
-    image: kotlin-rocket-bot:latest
+    image: kotlin-rocket-bot
     container_name: kotlin-rocket-bot
     ports:
       - "127.0.0.1:8081:8082"
