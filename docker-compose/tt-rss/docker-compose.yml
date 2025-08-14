@@ -6,10 +6,10 @@ services:
       - /etc/tt-rss/tt-rss.conf
     volumes:
       - app:/var/www/html
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - ttrss
+    depends_on:
+      - pgsql-proxy
     logging:
       driver: "journald"
       options:
@@ -45,8 +45,6 @@ services:
     depends_on:
       - app
     command: /opt/tt-rss/updater.sh
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - ttrss
     logging:
@@ -55,6 +53,21 @@ services:
         tag: "{{.Name}}"
     healthcheck:
       test: if [ "`ps|grep -c updater.sh`" -le "1" ]; then exit 1; else exit 0; fi
+
+  pgsql-proxy:
+    image: alpine/socat:latest
+    restart: unless-stopped
+    init: true
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
+    command: >
+      tcp-listen:5432,fork,reuseaddr
+      unix-connect:/var/run/postgresql/.s.PGSQL.5432
+    networks:
+      - ttrss
+    healthcheck:
+      test: "nc -z 127.0.0.1 5432"
+
 
 volumes:
   app:
