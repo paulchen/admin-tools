@@ -3,6 +3,7 @@ Description=kotlin-rocket-bot
 Requires=docker.service
 Requires=postgresql.service
 After=docker.service
+After=mongo.service
 
 [Service]
 EnvironmentFile=/etc/environment
