@@ -15,6 +15,7 @@ services:
       - TZ=Europe/Vienna
       - DOCKER_VERSION=${DOCKER_VERSION}
       - LINUX_VERSION=${LINUX_VERSION}
+      - MONGO_IMAGE_DIGEST=${MONGO_IMAGE_DIGEST}
     networks:
       - rocketchat_default
     logging:
