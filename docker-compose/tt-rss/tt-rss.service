@@ -10,6 +10,7 @@ User=root
 Type=oneshot
 RemainAfterExit=true
 TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker pull alpine/socat
 ExecStartPre=-/usr/bin/docker pull cthulhoo/ttrss-fpm-pgsql-static:latest
 ExecStartPre=-/usr/bin/docker pull cthulhoo/ttrss-web-nginx:latest
 
