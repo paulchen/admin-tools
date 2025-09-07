@@ -47,3 +47,5 @@ apt install -y --reinstall $UPDATES
 
 for pkg in $PACKAGES; do hold $pkg hold; done
 
+/opt/icinga-plugins/update-checker/refresh.sh
+
