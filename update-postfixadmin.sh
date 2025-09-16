@@ -24,6 +24,9 @@ mv postfixadmin-postfixadmin-* pfa-new
 rm -f pfa.tar.gz
 
 cp postfixadmin/config.local.php pfa-new
+
+chown root:www-data pfa-new
+
 cd pfa-new
 
 find -type f -print0 | xargs -0 chmod 640
@@ -32,6 +35,8 @@ mkdir templates_c && chmod 750 templates_c && chown -R www-data templates_c
 
 cat functions.inc.php |sed -e "s/^\$version = '.*';$/\$version = '$NEW_VERSION';/" > temp.php
 mv temp.php functions.inc.php
+
+sudo -u www-data bash composer-update.sh
 
 cd ..
 
