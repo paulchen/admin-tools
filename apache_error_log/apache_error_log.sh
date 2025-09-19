@@ -55,6 +55,7 @@ find /var/www /var/log \( -name error.log -or -name error.log.1 -or -name contai
 	grep -v 'AH10159' | # server is within MinSpareThreads of MaxRequestWorkers, consider raising the MaxRequestWorkers setting
 	grep -v 'AH01075' | # Error dispatching request to ...
 	grep -v 'AH10508' | # Unsafe URL with %3f URL rewritten without UnsafeAllow3F
+	grep -v 'AH02812' | # attempt to invoke directory as script
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
 	grep -v 'This request has been forwarded to a 404 error page' | # Symfony framework
