@@ -57,6 +57,7 @@ find /var/www /var/log \( -name error.log -or -name error.log.1 -or -name contai
 	grep -v 'AH10508' | # Unsafe URL with %3f URL rewritten without UnsafeAllow3F
 	grep -v 'AH02812' | # attempt to invoke directory as script
 	grep -v 'AH10509' | # h2_session: not sent ...
+	grep -v 'AH10244' | # invalid URI path
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
 	grep -v 'This request has been forwarded to a 404 error page' | # Symfony framework
