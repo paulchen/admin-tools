@@ -3,8 +3,8 @@ services:
     build:
       context: nextcloud-custom
       args:
-        NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}
-    image: nextcloud-custom:${NEXTCLOUD_VERSION}
+        NEXTCLOUD_VERSION: ${NEXTCLOUD_VERSION}-fpm
+    image: nextcloud-custom:${NEXTCLOUD_VERSION}-fpm
     container_name: nextcloud-cloud
     restart: always
     volumes:
@@ -28,7 +28,7 @@ services:
       interval: 5m
       timeout: 10s 
   cron:
-    image: nextcloud-custom:${NEXTCLOUD_VERSION}
+    image: nextcloud-custom:${NEXTCLOUD_VERSION}-fpm
     pull_policy: never
     container_name: nextcloud-cron
     restart: unless-stopped
@@ -53,7 +53,7 @@ services:
       interval: 5m
       timeout: 10s 
   redis:
-    image: redis:${REDIS_VERSION}
+    image: redis:${REDIS_VERSION}-alpine
     container_name: nextcloud-redis
     restart: always
     networks:

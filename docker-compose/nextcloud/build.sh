@@ -5,7 +5,7 @@ cd "$DIRECTORY"
 
 . /etc/default/nextcloud
 
-docker pull nextcloud:${NEXTCLOUD_VERSION}
+docker pull nextcloud:${NEXTCLOUD_VERSION}-fpm
 
 docker compose --env-file /etc/default/nextcloud build
 
