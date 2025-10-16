@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname "$0"`
+
 error=0
 
 rm -f /tmp/backup_mongo.log
@@ -8,13 +10,8 @@ echo "" >> /tmp/backup_mongo.log
 date >> /tmp/backup_mongo.log 2>&1 || error=1
 echo "" >> /tmp/backup_mongo.log
 
-rm -rf /mnt/backup/mongodb/dump/* >> /tmp/backup_mongo.log 2>&1 || error=1
-docker exec mongo mongodump --out=/backup >> /tmp/backup_mongo.log 2>&1 || error=1
-cd /mnt/backup/mongodb >> /tmp/backup_mongo.log 2>&1 || error=1
-temp_filename=dumps/.dump-$(date +%Y%m%d%H%M%S).tar.bz2
-filename=dumps/dump-$(date +%Y%m%d%H%M%S).tar.bz2
-tar cjvf "$temp_filename" dump >> /tmp/backup_mongo.log 2>&1 || error=1
-mv "$temp_filename" "$filename" || error=1
+./backup-part1.sh >> /tmp/backup_mongo.log 2>&1 || error=1
+./backup-part2.sh >> /tmp/backup_mongo.log 2>&1 || error=1
 
 echo "" >> /tmp/backup_mongo.log
 date >> /tmp/backup_mongo.log 2>&1 || error=1
