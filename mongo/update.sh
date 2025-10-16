@@ -56,7 +56,7 @@ stop_unit rocketchat-archive
 stop_unit kotlin-rocket-bot
 stop_unit rocketchat
 
-"$DIRECTORY/backup.mongo.sh" || exit 1
+"$DIRECTORY/backup-part1.sh" || exit 1
 
 stop_unit mongo
 
@@ -75,6 +75,8 @@ start_unit kotlin-rocket-bot
 start_unit rocketchat-archive
 start_unit docker-munin-mongodb
 start_unit rocketchat-dev
+
+"$DIRECTORY/backup-part2.sh" || exit 1
 
 /opt/icinga-plugins/update-checker/refresh.sh || exit 1
 
