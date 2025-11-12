@@ -1,6 +1,10 @@
 services:
   mongo:
     image: mongo:${MONGO_VERSION}
+    ulimits:
+      nofile:
+        soft: "65535"
+        hard: "65535"
     command: mongod --oplogSize 128 --replSet rs0 --storageEngine=wiredTiger
     container_name: mongo
     env_file: /etc/default/mongo
