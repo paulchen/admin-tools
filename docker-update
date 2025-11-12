@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES="containerd.io docker-ce"
+PACKAGES="containerd.io docker-ce docker-ce-cli docker-ce-rootless-extras"
 
 hold() {
 	echo "$1 $2" | dpkg --set-selections
