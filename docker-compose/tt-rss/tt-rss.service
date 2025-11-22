@@ -11,8 +11,8 @@ Type=oneshot
 RemainAfterExit=true
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker pull alpine/socat
-ExecStartPre=-/usr/bin/docker pull cthulhoo/ttrss-fpm-pgsql-static:latest
-ExecStartPre=-/usr/bin/docker pull cthulhoo/ttrss-web-nginx:latest
+ExecStartPre=-/usr/bin/docker pull supahgreg/tt-rss:latest
+ExecStartPre=-/usr/bin/docker pull supahgreg/tt-rss-web-nginx:latest
 
 ExecStart=docker compose -f /opt/admin-tools/docker-compose/tt-rss/docker-compose.yml up -d --remove-orphans
 ExecStop=docker compose -f /opt/admin-tools/docker-compose/tt-rss/docker-compose.yml down
