@@ -81,6 +81,8 @@ git_pull /opt/check_rpi_temp/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log
 git_pull /opt/nagios-rbl-check/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
 git_pull /opt/dehydrated/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
 git_pull /opt/ddns/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
+git_pull /opt/nagios-testssl/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
+git_pull /opt/testssl.sh/ 2>&1 | tee -a "$TMPLOG" >> /var/log/autoupdate.log || ERROR=1
 
 /opt/icinga-plugins/update-checker/applications/phpmyadmin/update_installed.sh > /dev/null 2>&1 || shutdown "$ERROR" "$TMPLOG"
 
