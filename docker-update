@@ -47,5 +47,7 @@ apt install -y --reinstall $UPDATES
 
 for pkg in $PACKAGES; do hold $pkg hold; done
 
+systemctl restart kotlin-rocket-bot
+
 /opt/icinga-plugins/update-checker/refresh.sh
 
