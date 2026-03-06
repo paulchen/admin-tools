@@ -22,6 +22,9 @@ if [ "$1" == "--convert" ]; then
 		fi
 	done < /dev/stdin
 	exit
+else
+	exec 200>/tmp/apache_error_log.lock
+	flock -n 200 || { echo "Script already running"; exit 1; }
 fi
 
 
