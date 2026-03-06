@@ -14,7 +14,7 @@ services:
     networks:
       - nextcloud
     depends_on:
-      - redis
+      - valkey
     ports:
       - 127.0.0.1:9000:9000
     extra_hosts:
@@ -52,9 +52,9 @@ services:
       test: sudo -u www-data php occ status -e || exit 1
       interval: 5m
       timeout: 10s 
-  redis:
-    image: redis:${REDIS_VERSION}-alpine
-    container_name: nextcloud-redis
+  valkey:
+    image: valkey/valkey:${VALKEY_VERSION}-alpine
+    container_name: nextcloud-valkey
     restart: always
     networks:
       - nextcloud
