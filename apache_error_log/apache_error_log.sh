@@ -62,6 +62,7 @@ find /var/www /var/log \( -name error.log -or -name error.log.1 -or -name contai
 	grep -v 'AH10509' | # h2_session: not sent ...
 	grep -v 'AH10244' | # invalid URI path
 	grep -v 'AH02608' | # read request body failed
+	grep -v 'AH01084' | # pass request body failed
 	grep -v 'AH01097' | # pass request body failed
 	grep -v 'DisplayAction->execute' | # RSS bridge
 	grep -v 'Empty module and/or action after parsing the URL' | # Symfony framework
