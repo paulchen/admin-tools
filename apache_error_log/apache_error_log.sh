@@ -64,6 +64,8 @@ find /var/www /var/log \( -name error.log -or -name error.log.1 -or -name contai
 	grep -v 'AH00484' | # server reached MaxRequestWorkers setting
 	grep -v 'AH00957' | # FCGI: attempt to connect to ... failed
 	grep -v 'AH02608' | # read request body failed
+	grep -v 'AH00045' | # child process ... still did not exit, sending a SIGTERM
+	grep -v 'AH00046' | # child process ... still did not exit, sending a SIGKILL
 	grep -v 'AH01067' | # Failed to read FastCGI header
 	grep -v 'AH01079' | # failed to make connection to backend: ...
 	grep -v 'AH01084' | # pass request body failed
