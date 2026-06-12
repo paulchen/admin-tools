@@ -62,21 +62,30 @@ stop_unit mongo
 
 echo "MONGO_VERSION=$AVAILABLE" > /etc/default/mongo
 
-echo "Waiting 15 seconds"
-sleep 15
-
 start_unit mongo
 
-echo "Waiting 20 seconds"
-sleep 20
+echo "Waiting 10 seconds"
+sleep 10
 
 start_unit rocketchat
-start_unit kotlin-rocket-bot
+
+echo "Waiting 10 seconds"
+sleep 10
+
 start_unit rocketchat-archive
 start_unit docker-munin-mongodb
 start_unit rocketchat-dev
 
-"$DIRECTORY/backup-part2.sh" || exit 1
+echo "Waiting 5 seconds"
+sleep 5
+
+start_unit kotlin-rocket-bot
 
 /opt/icinga-plugins/update-checker/refresh.sh || exit 1
+
+echo "Waiting 120 seconds"
+sleep 120
+
+"$DIRECTORY/backup-part2.sh" || exit 1
+
 
